@@ -85,8 +85,10 @@ the report ends in two sections built for that:
   door" — a targeted action rather than a trust-wide memo.
 
 Charts are hand-built inline SVG with hover tooltips: no chart library, no CDN, still one file.
-Colours follow the NHS identity palette. The three status colours were validated for
-colour-vision deficiency (worst adjacent pair ΔE 12.7 protan, 29.5 normal vision); every
+Colours follow the NHS identity palette. The four status colours were validated for
+colour-vision deficiency — NHS red and NHS pink are too close to sit next to each other, so the
+stack order (Met, Not met, Not documented, To resolve) keeps them apart: worst adjacent pair
+ΔE 9.1 deutan, 19.2 normal vision. Every
 segment carries a direct label and the statistics table repeats the data, so nothing depends
 on colour alone.
 
@@ -120,11 +122,11 @@ classification — get it confirmed rather than inferred.
   7 criteria) and VTE risk assessment (NICE NG89, 6 criteria) — plus **custom criteria**:
   paste your own, one per line. Hundreds of audit standards exist, so a library is pointless;
   the engine is the same.
-- **Three statuses**: Met / **Not documented** / **Not met**. "Not documented" is the honest
-  answer when the record is silent — the commonest real audit finding. A cell is **Not met**
-  either because the notes document a failure or because the notes contradict themselves; the
-  second carries a `conflict` flag, is counted separately as *to resolve*, and the evidence
-  panel says plainly that a clinician must resolve it. The tool never picks a side.
+- **Four statuses**: **Met** (green) / **Not met** (red) / **Not documented** (amber) /
+  **To resolve** (pink). *Not documented* is the honest answer when the record is silent — the
+  commonest real audit finding. *Not met* is a documented failure. *To resolve* is what the tool
+  returns instead of guessing when the record contradicts itself; the evidence panel shows both
+  statements and says plainly that a clinician must settle it. The tool never picks a side.
 - **Evidence on every cell.** Click any chip for the verbatim source sentence. If it can't
   quote the notes, the answer is Not documented.
 - **Per-row clinician sign-off**, surfaced in the scope bar and in the report's Methods section.

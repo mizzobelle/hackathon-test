@@ -12,7 +12,8 @@
     --line:#D8DDE0; --line-2:#AEB7BD; --paper:#fff; --wash:#F0F4F5;
     --soft:#E8F1FA;
     --met:#006435; --met-bg:#E6F2EC;
-    --notmet:#9B1D5F; --notmet-bg:#FBE9F2;
+    --notmet:#B3271B; --notmet-bg:#FBEAE8;
+    --resolve:#9B1D5F; --resolve-bg:#FBE9F2;
     --nodoc:#8A5200; --nodoc-bg:#FDF0DE;
   }
   *{box-sizing:border-box}
@@ -109,8 +110,8 @@
     font-size:.77rem;font-weight:700;color:var(--ink-2)}
   .stat.g{background:var(--met-bg);color:var(--met);border-color:#BFDDCE}
   .stat.a{background:var(--nodoc-bg);color:var(--nodoc);border-color:#EFD9AE}
-  .stat.r{background:var(--notmet-bg);color:var(--notmet);border-color:#F2C7DC}
-  .stat.p{background:var(--review-bg);color:var(--review);border-color:#F2C7DC}
+  .stat.r{background:var(--notmet-bg);color:var(--notmet);border-color:#F0C6C1}
+  .stat.p{background:var(--resolve-bg);color:var(--resolve);border-color:#F2C7DC}
 
   /* ---- table ---- */
   #results{max-height:70vh;overflow:auto}
@@ -127,7 +128,8 @@
   .chip{display:block;width:100%;padding:5px 3px;border-radius:6px;border:1px solid transparent;
     font-size:.66rem;font-weight:800;text-align:center;white-space:nowrap;cursor:pointer}
   .chip.met{background:var(--met-bg);color:var(--met);border-color:#BFDDCE}
-  .chip.notmet{background:var(--notmet-bg);color:var(--notmet);border-color:#F2C7DC}
+  .chip.notmet{background:var(--notmet-bg);color:var(--notmet);border-color:#F0C6C1}
+  .chip.resolve{background:var(--resolve-bg);color:var(--resolve);border-color:#F2C7DC}
   .chip.nodoc{background:var(--nodoc-bg);color:var(--nodoc);border-color:#EFD9AE}
   .chip.review{background:var(--review-bg);color:var(--review);border-color:#F2C7DC}
   .chip.sel{box-shadow:0 0 0 2px var(--ink)}
@@ -394,7 +396,7 @@
       <details class="mini mt" open>
         <summary>Sample cases</summary>
         <ul class="samples">
-          <li><label><input type="checkbox" data-case="c1"><span><b>Case 1</b>58F · urinary symptoms and fever · contradictory allergy record</span></label></li>
+          <li><label><input type="checkbox" data-case="c1"><span><b>Case 1</b>58F · urinary symptoms and fever · sparse record</span></label></li>
           <li><label><input type="checkbox" data-case="c2"><span><b>Case 2</b>71M · community-acquired pneumonia, CURB-65 2</span></label></li>
         </ul>
         <p id="sample-note">No case selected</p>
@@ -464,9 +466,9 @@
 <script>
 /* ============================ CRITERIA ENGINE ============================ */
 
-const MET='met', NOTMET='notmet', NODOC='nodoc';
-const LABEL={met:'Met',notmet:'Not met',nodoc:'Not documented'};
-const SHORT={met:'Met',notmet:'Not met',nodoc:'Not doc.'};
+const MET='met', NOTMET='notmet', NODOC='nodoc', RESOLVE='resolve';
+const LABEL={met:'Met',notmet:'Not met',nodoc:'Not documented',resolve:'To resolve'};
+const SHORT={met:'Met',notmet:'Not met',nodoc:'Not doc.',resolve:'Resolve'};
 /* A cell can be Not met for two reasons: the notes document a failure, or the notes
    contradict themselves. The second carries conflict:true — AuditPilot never picks a
    side, and the count is surfaced separately so the clinician can resolve them. */
@@ -513,7 +515,7 @@ const TEMPLATES={
        check:s=>{
          const nkda=findSentence(s,/\b(NKDA|no known (drug )?allerg\w*|nil known allerg\w*)\b/i);
          const spec=findSentence(s,/\ballerg\w*[^.;]*\b(penicillin|amoxicillin|co-?amoxiclav|macrolide|sulfonamide|cephalosporin|clarithromycin|trimethoprim)\b|\b(penicillin|amoxicillin|macrolide|cephalosporin)\b[^.;]*\ballerg/i);
-         if(nkda&&spec) return {status:NOTMET, conflict:true, evidence:nkda+'  ⟷  '+spec,
+         if(nkda&&spec) return {status:RESOLVE, conflict:true, evidence:nkda+'  ⟷  '+spec,
            why:'The record contains two contradictory allergy statements. AuditPilot will not choose between them — a clinician must resolve this before the row is scored.'};
          const e=nkda||spec||findSentence(s,/\ballerg/i);
          return e?ok(e):nodoc('No allergy status recorded anywhere in the notes.');
@@ -546,7 +548,7 @@ const TEMPLATES={
          if(before) return ok(before);
          const after=cand.find(x=>/\bafter\b/i.test(x));
          if(after) return {status:NOTMET, evidence:after, why:'Samples are documented as taken after the first dose.'};
-         return {status:NOTMET, conflict:true, evidence:cand[0],
+         return {status:RESOLVE, conflict:true, evidence:cand[0],
            why:'Samples are documented, but their timing relative to the first antibiotic dose is not. AuditPilot will not assume it — please confirm from the drug chart.'};
        }},
       {short:'48–72h review', name:'48–72h antibiotic review documented',
@@ -610,7 +612,7 @@ function customCriteria(lines){
           const n=keys.filter(k=>low.includes(k)).length;
           if(n>bestN){bestN=n;best=sent;}
         }
-        if(bestN>=2) return {status:NOTMET, conflict:true, evidence:best,
+        if(bestN>=2) return {status:RESOLVE, conflict:true, evidence:best,
           why:'The built-in engine matched this by keyword only. It cannot verify the criterion is genuinely met — confirm the quoted sentence, or run the check with Claude.'};
         return nodoc('No sentence in the notes matched this criterion by keyword.');
       }};
@@ -648,9 +650,9 @@ const SYSTEM=`You are an audit documentation checker. You never judge the qualit
 For EACH criterion return:
 - status: "met", "notmet", or "nodoc"
   - "met": the notes explicitly document it.
-  - "notmet": the notes document that it was NOT done, document something that fails the criterion, OR are internally contradictory or ambiguous on this point.
+  - "notmet": the notes document that it was NOT done, or document something that fails the criterion.
   - "nodoc": nothing in the notes relates to the criterion. The care may have happened; the notes do not show it.
-- conflict: true only when the status is "notmet" because the record contradicts itself or is ambiguous. Never guess between conflicting statements — set conflict true and explain the conflict in "why".
+- conflict: set true when the notes are internally contradictory or ambiguous on this point. Never guess between conflicting statements — return "notmet" with conflict true and explain the conflict in "why"; it will be shown as "To resolve" rather than scored.
 - evidence: the EXACT sentence or phrase from the notes, quoted verbatim. If status is "nodoc", evidence must be exactly "No relevant documentation found."
 - why: one short sentence explaining the status.
 
@@ -684,7 +686,8 @@ async function runClaude(cases, tpl, key){
     const parsed=JSON.parse(block.text);
     const cells=tpl.criteria.map((c,ci)=>{
       const r=parsed.results[ci]||{};
-      const st=[MET,NOTMET,NODOC].includes(r.status)?r.status:NOTMET;
+      let st=[MET,NOTMET,NODOC].includes(r.status)?r.status:NOTMET;
+      if(st===NOTMET&&r.conflict) st=RESOLVE;
       return {criterion:c.name, status:st, conflict:!!r.conflict,
         evidence:(st===NODOC?NOEV:(r.evidence||NOEV)), why:r.why||''};
     });
@@ -720,7 +723,7 @@ function renderSummary(){
   const N=rows.length, M=tpl.criteria.length, total=N*M;
   const count=st=>rows.reduce((a,r)=>a+r.cells.filter(c=>c.status===st).length,0);
   const met=count(MET), nd=count(NODOC), nm=count(NOTMET);
-  const rv=rows.reduce((a,r)=>a+r.cells.filter(c=>c.conflict).length,0);
+  const rv=count(RESOLVE);
   const confirmed=rows.filter(r=>r.confirmed).length;
 
   $('scopebar').innerHTML=
@@ -867,7 +870,7 @@ $('template').addEventListener('change',renderCriteriaList);
 $('engine').addEventListener('change',e=>$('apirow').classList.toggle('on',e.target.value==='claude'));
 
 const SAMPLES=[
-{id:'c1', label:'Case 1', desc:'58F · urinary symptoms and fever · contradictory allergy record', text:
+{id:'c1', label:'Case 1', desc:'58F · urinary symptoms and fever · sparse record', text:
 `58F brought in by daughter. Feeling unwell 2 days, hot and shivery, going to the toilet a lot and it stings. Some lower abdominal discomfort. No vomiting. No back pain reported.
 
 PMH: T2DM on metformin, hypothyroidism, osteoarthritis both knees. DH: Metformin 1g BD, Levothyroxine 100mcg OD, Co-codamol 30/500 PRN. Allergies: NKDA. SH: lives alone, daughter nearby.
@@ -888,7 +891,7 @@ Settled overnight after fluids. Passed urine x2, still uncomfortable. Obs stable
 
 WARD ROUND — 02/04/2026 11:40 — Dr P. Sandhu, Registrar
 Feels a bit better. Obs: T 37.6, HR 96, BP 112/70. Abdo soft, still mildly tender suprapubically. Bloods: WCC 15.2, CRP 138, Cr 112.
-Continue antibiotics. Encourage oral fluids. Metformin held given AKI, sliding scale not required, CBGs 9–12. Plan: repeat bloods tomorrow.
+MSU sent to microbiology after the first dose of antibiotics was given. Continue antibiotics. Encourage oral fluids. Metformin held given AKI, sliding scale not required, CBGs 9–12. Plan: repeat bloods tomorrow.
 
 NURSING NOTE — 03/04/2026 09:00
 Slept well. Eating and drinking. Continues antibiotics. No fever overnight. Mobilising to toilet with frame.
@@ -1026,9 +1029,12 @@ $('csv').addEventListener('click',()=>{
 /* NHS palette, validated against a white surface: worst adjacent CVD ΔE 12.7 (protan),
    normal-vision ΔE 29.5 — all hard checks pass. Orange sits below 3:1 contrast, so every
    segment is directly labelled and the statistics table repeats the data. */
-const FILL={met:'#007F3B', nodoc:'#ED8B00', notmet:'#AE2573'};
-const INK ={met:'#fff',    nodoc:'#0b0b0b', notmet:'#fff'};
-const ORDER=[MET,NODOC,NOTMET];
+/* NHS palette. Red and pink are too close to sit next to each other — validated in this
+   order (Met, Not met, Not documented, To resolve) so they never touch: worst adjacent
+   CVD ΔE 9.1 (deutan), normal-vision ΔE 19.2, all hard checks pass. */
+const FILL={met:'#007F3B', notmet:'#DA291C', nodoc:'#ED8B00', resolve:'#AE2573'};
+const INK ={met:'#fff',    notmet:'#fff',    nodoc:'#212B32', resolve:'#fff'};
+const ORDER=[MET,NOTMET,NODOC,RESOLVE];
 const SEQ='#005EB8';
 const RAMP=['#E5EFF8','#C2DAF0','#9BC3E8','#6FA9DE','#3F8BD0','#005EB8','#003087'];
 
@@ -1240,8 +1246,7 @@ function groupBy(rows,dim,M){
 function computeStats(){
   const {rows,tpl}=STATE, N=rows.length, M=tpl.criteria.length;
   const per=tpl.criteria.map((c,ci)=>{
-    const counts={}; [MET,NOTMET,NODOC].forEach(s=>counts[s]=rows.filter(r=>r.cells[ci].status===s).length);
-    counts.conflict=rows.filter(r=>r.cells[ci].conflict).length;
+    const counts={}; [MET,NOTMET,NODOC,RESOLVE].forEach(s=>counts[s]=rows.filter(r=>r.cells[ci].status===s).length);
     return {c,ci,counts,met:counts[MET],missing:N-counts[MET],pct:Math.round(100*counts[MET]/N)};
   });
   const ranked=[...per].sort((a,b)=>a.pct-b.pct);
@@ -1256,7 +1261,7 @@ function computeStats(){
   return {N,M,per,ranked,priority,priorityShare:totalMissing?Math.round(100*cum/totalMissing):0,priorityCum:cum,
     totalMet,totalChecks,totalMissing,pct:Math.round(100*totalMet/totalChecks),
     notDoc:per.reduce((a,x)=>a+x.counts[NODOC],0), notMet:per.reduce((a,x)=>a+x.counts[NOTMET],0),
-    needsReview:rows.reduce((a,r)=>a+r.cells.filter(c=>c.conflict).length,0),
+    needsReview:per.reduce((a,x)=>a+x.counts[RESOLVE],0),
     dist:Array.from({length:M+1},(_,i)=>scores.filter(v=>v===i).length),
     median:N%2?sorted[(N-1)/2]:(sorted[N/2-1]+sorted[N/2])/2, mean:totalMet/N,
     min:sorted[0], max:sorted[N-1], full:scores.filter(v=>v===M).length,
@@ -1271,8 +1276,8 @@ function defaultNarrative(S){
 intro:`${t.name}. ${t.standard} sets out what the clinical record should contain for each patient in this group. Incomplete documentation cannot demonstrate that the required steps took place, regardless of the care actually delivered. This audit examines the record only and makes no assessment of clinical care.`,
 aim:`To assess whether the clinical documentation for this sample meets each of the ${M} criteria derived from the standard, and to identify where the record most often fails to demonstrate compliance.`,
 standard:`${t.standard}. Target: ${t.target}.`,
-methods:`${N} case${N>1?'s were':' was'} reviewed retrospectively against ${M} fixed criteria, applied identically to every case. Each criterion was assessed as Met, Not met or Not documented. Every judgement is supported by a verbatim quotation from the record; where no relevant text exists the criterion is recorded as Not documented rather than assumed. Contradictory or ambiguous records were flagged for clinician resolution and not scored automatically. ${S.confirmed} of ${N} rows were confirmed by a clinician before analysis.`,
-results:`Overall documented compliance was ${S.totalMet} of ${S.totalChecks} checks (${S.pct}%), against a target of 100%. Cases documented a median of ${S.median} and a mean of ${S.mean.toFixed(1)} of the ${M} criteria (range ${S.min}–${S.max}); ${S.full} of ${N} case${S.full===1?'':'s'} (${Math.round(100*S.full/N)}%) met all ${M}. Of the ${S.totalMissing} checks not met, ${S.notDoc} ${S.notDoc===1?'was':'were'} Not documented and ${S.notMet} ${S.notMet===1?'was':'were'} Not met${S.needsReview?` — ${S.needsReview} of those because the record contradicted itself, and were referred to a clinician to resolve rather than scored automatically`:''}. Per-criterion compliance is given in the results table and Figure 1.`,
+methods:`${N} case${N>1?'s were':' was'} reviewed retrospectively against ${M} fixed criteria, applied identically to every case. Each criterion was assessed as Met, Not met, Not documented or To resolve. Every judgement is supported by a verbatim quotation from the record; where no relevant text exists the criterion is recorded as Not documented rather than assumed. Contradictory or ambiguous records were flagged for clinician resolution and not scored automatically. ${S.confirmed} of ${N} rows were confirmed by a clinician before analysis.`,
+results:`Overall documented compliance was ${S.totalMet} of ${S.totalChecks} checks (${S.pct}%), against a target of 100%. Cases documented a median of ${S.median} and a mean of ${S.mean.toFixed(1)} of the ${M} criteria (range ${S.min}–${S.max}); ${S.full} of ${N} case${S.full===1?'':'s'} (${Math.round(100*S.full/N)}%) met all ${M}. Of the ${S.totalMissing} checks not met, ${S.notDoc} ${S.notDoc===1?'was':'were'} Not documented and ${S.notMet} ${S.notMet===1?'was':'were'} Not met${S.needsReview?`; a further ${S.needsReview} could not be scored because the record contradicted itself and ${S.needsReview===1?'was':'were'} referred to a clinician to resolve`:''}. Per-criterion compliance is given in the results table and Figure 1.`,
 discussion:w.length
 ? `The weakest criteria were ${w.slice(0,2).map(x=>`"${x.c.name}" (${x.pct}%)`).join(' and ')}. ${S.notDoc>S.notMet?`Almost all shortfalls are absent documentation rather than documented failures of the standard, which is consistent with the steps being carried out but not recorded. `:''}The pattern is consistent across the sample rather than confined to a few cases, which points to the design of the record — the chart, the proforma and the ward round template — rather than to individual practice. ${S.priority.length>1?`${S.priority.length} criteria account for ${S.priorityShare}% of all missing documentation, so a small number of changes to the record should recover most of the shortfall. `:''}This audit assesses the record alone; no conclusion should be drawn from it about the appropriateness of the clinical care given, and no individual clinician was identified in the analysis.`
 : `All criteria were documented in all cases reviewed. No documentation shortfall was identified in this sample. This audit assesses the record alone and makes no assessment of the clinical care given.`,
