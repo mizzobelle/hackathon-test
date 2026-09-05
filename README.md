@@ -39,30 +39,69 @@ drop, Vercel. It is one file.
 7. **Confirm all rows** — the tool proposes, the clinician decides; nothing reaches the report
    unconfirmed. Then **Draft audit report**.
 
-## The report
+## The report — a draft that drives action
 
-**Draft audit report** builds a document, not a text box:
+**Draft audit report** opens a two-column workspace: a **report builder** on the left, the
+**document** on the right. Nothing appears in the report unless you tick it.
 
-- **Four summary tiles** — documented compliance (64%), checks Not documented, fully compliant
-  cases, and checks escalated to a clinician.
-- **Figure 1 — documentation status by criterion.** A stacked bar per criterion, ranked worst
-  first, showing Met / Not documented / Needs review / Not met across all 30 cases. This is the
-  chart that carries the pitch: *microbiology* and *48–72h review* are documented in 12 of 30
-  cases each. That is a form problem, not a practice problem, and you cannot see it reading
-  notes one at a time.
-- **Figure 2 — distribution of completeness.** A histogram of how many criteria each case
-  documented. The 30-case sample is bimodal — well-documented cases and near-empty ones — which
-  answers "is this a few bad cases or systemic?" before anyone asks.
-- **Descriptive statistics table** — counts and % Met per criterion, with totals, median, mean
-  and range.
-- **The narrative report** in the standard seven headings, with the descriptive statistics
-  written into Results and the weakest criteria named in Discussion.
-- **Print / save as PDF** — a print stylesheet drops the tool chrome and prints the document alone.
+It is explicitly a **draft**. A banner at the top says so until every written section has been
+read and marked *Checked*, and a progress bar in the builder tracks how far through you are.
+
+**What you can change, and what you can't.**
+
+| | |
+|---|---|
+| **Editable** | Introduction, Aim, Standard, Methods, Results, Discussion, Conclusion — click and type. An edited section is tagged, with a *Restore generated text* link to undo. The action plan is yours to complete. |
+| **Locked** (`computed`) | Every figure, the summary tiles and the statistics table. They are calculated from the confirmed rows and cannot be typed over. An audit whose numbers can be hand-edited is not an audit. |
+
+**Driving action.** Findings are useless without a change that has a name and a date on it, so
+the report ends in two sections built for that:
+
+- **Priority — fix these first.** A Pareto cut: in the sample, 3 of the 7 criteria account for
+  **67%** of all missing documentation. Seven half-finished actions change nothing.
+- **Action plan.** One row per priority gap: a chosen change to the record, an owner, a date,
+  and how you will know it worked (pre-filled with the re-audit measure and the current
+  baseline). Each gap offers 3–4 ready-made interventions, tagged by type — *Form*, *EPR*,
+  *Ward routine*, *Prompt*, *Teaching* — or write your own.
+
+**Figures** (all optional, all off unless chosen):
+
+- **Compliance by criterion** — stacked bar, ranked worst first. The systemic gaps.
+- **Completeness distribution** — histogram of criteria documented per case. Answers "a few bad
+  cases, or every case?" before anyone asks.
+- **Gaps that occur together** — a co-occurrence matrix. Microbiology and 48–72h review are both
+  missing in the *same* 17 of 30 cases: one broken step in the workflow, not two problems, and
+  one change may fix both.
+- **Breakdown by subgroup** — compliance split by any field collected with the case (`Ward:`,
+  `Admission:`). In the sample: Emergency Department 34% against specialty wards 90%, and out of
+  hours 37% against in hours 82%. That is what turns "documentation is poor" into "fix the front
+  door" — a targeted action rather than a trust-wide memo.
 
 Charts are hand-built inline SVG with hover tooltips: no chart library, no CDN, still one file.
 The four status colours were validated for colour-vision deficiency (worst adjacent pair
 ΔE 16.2 protan, 30.3 normal vision); every segment carries a direct label and the statistics
 table repeats the data, so nothing depends on colour alone.
+
+**Print / save as PDF** drops the tool chrome, the builder and the edit controls, and prints the
+document alone.
+
+## Staying out of medical device territory
+
+The line that matters is *individual patient* and *clinical purpose*. AuditPilot deliberately
+sits on the safe side of both, and the code enforces it rather than relying on good intentions:
+
+- It reports whether information is **present in a record**, and aggregates that across a sample.
+  That is documentation audit and service evaluation, not care of a patient.
+- **Interventions come from a fixed library, not free generation.** Every entry changes how
+  something is *recorded* — a form field, a system setting, a ward-round routine, a teaching
+  point. None names a drug, a dose, a threshold or a clinical action. The offline engine cannot
+  invent one; there is no path by which it produces a clinical recommendation.
+- Nothing is generated **per patient**. Actions attach to a criterion across the whole sample.
+- The clinician chooses the action, the owner and the date. The tool proposes candidates.
+- An intended-purpose statement is carried in the app and at the foot of every report.
+
+For anything beyond a prototype, the declared intended purpose is what determines
+classification — get it confirmed rather than inferred.
 
 ## What's in it
 
