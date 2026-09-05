@@ -33,17 +33,17 @@ Five tabs across the top, not one long scroll. The header carries the running st
 
 ## The 3-minute demo
 
-1. **Start** → **Begin an audit** → **Sample cases** → **30-case sample** → **Check
-   documentation**. Lands you on the table: 30 patients, 7 criteria, 210 checks, about a second.
-2. Click an amber cell — *"No relevant documentation found."* The commonest real audit finding:
-   the care probably happened, the notes can't prove it.
-3. Click the pink **Not met** cell on Case 4 — clerking says NKDA, drug chart says penicillin
-   allergy. The tool refuses to pick a side and hands it to a human.
-4. **Confirm all** → **Findings**. The priority box: 3 of 7 criteria account for 67% of all gaps.
-5. Switch the fourth panel to **Subgroup**: Emergency Department 34% against specialty wards 90%.
-   Switch the dimension to `Admission`: out of hours 37% against in hours 82%. *That* is the
-   finding — not "documentation is poor" but "fix the front door".
-6. **Report** → the draft, the action plan, **Print / PDF**.
+1. **Start** → **Begin an audit**.
+2. **Sample cases** → tick **Case 1** and **Case 2**. Both load into the notes field, separated
+   by `---`, so the tool reads them as two patients.
+3. **Check documentation** → lands on the table. Two rows, seven criteria, fourteen checks.
+4. **Case 2 is 7 of 7** — a well-kept record. Click any green cell for the sentence that earns it:
+   *"Blood cultures x2 sets and sputum culture sent — both taken prior to first antibiotic dose."*
+5. **Case 1 is 1 of 7** — a wall of amber. Click one: *"No relevant documentation found."* The
+   care almost certainly happened; the record cannot show it. That is the commonest real audit
+   finding, and it is what an evening of manual data collection is spent discovering.
+6. Read the table **vertically**: every criterion except drug/dose/route is 1 of 2.
+7. **Confirm all** → **Findings** → **Report**.
 
 ## The report — a draft that drives action
 
@@ -113,9 +113,9 @@ classification — get it confirmed rather than inferred.
 
 ## What's in it
 
-- **A 30-case synthetic sample** — the sample size the audit checklist actually asks for.
-  Realistic spread: indication 87%, drug/dose/route 97%, allergy 70%, duration 50%,
-  guideline 63%, microbiology 40%, 48–72h review 40%. Overall 64%.
+- **Two worked cases**, tickable independently or together — a full 3-day admission with a
+  sparse record (1 of 7) and a well-documented CAP admission (7 of 7). Ticking both loads them
+  separated by `---` so they audit as two patients.
 - **Two built-in templates** — antimicrobial prescribing (NICE NG15 / Start Smart Then Focus,
   7 criteria) and VTE risk assessment (NICE NG89, 6 criteria) — plus **custom criteria**:
   paste your own, one per line. Hundreds of audit standards exist, so a library is pointless;
