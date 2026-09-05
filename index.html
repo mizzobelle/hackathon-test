@@ -394,7 +394,7 @@
       <details class="mini mt" open>
         <summary>Sample cases</summary>
         <ul class="samples">
-          <li><label><input type="checkbox" data-case="c1"><span><b>Case 1</b>58F · urinary symptoms and fever · 3-day admission</span></label></li>
+          <li><label><input type="checkbox" data-case="c1"><span><b>Case 1</b>58F · urinary symptoms and fever · contradictory allergy record</span></label></li>
           <li><label><input type="checkbox" data-case="c2"><span><b>Case 2</b>71M · community-acquired pneumonia, CURB-65 2</span></label></li>
         </ul>
         <p id="sample-note">No case selected</p>
@@ -867,10 +867,10 @@ $('template').addEventListener('change',renderCriteriaList);
 $('engine').addEventListener('change',e=>$('apirow').classList.toggle('on',e.target.value==='claude'));
 
 const SAMPLES=[
-{id:'c1', label:'Case 1', desc:'58F · urinary symptoms and fever · 3-day admission', text:
+{id:'c1', label:'Case 1', desc:'58F · urinary symptoms and fever · contradictory allergy record', text:
 `58F brought in by daughter. Feeling unwell 2 days, hot and shivery, going to the toilet a lot and it stings. Some lower abdominal discomfort. No vomiting. No back pain reported.
 
-PMH: T2DM on metformin, hypothyroidism, osteoarthritis both knees. DH: Metformin 1g BD, Levothyroxine 100mcg OD, Co-codamol 30/500 PRN. SH: lives alone, daughter nearby.
+PMH: T2DM on metformin, hypothyroidism, osteoarthritis both knees. DH: Metformin 1g BD, Levothyroxine 100mcg OD, Co-codamol 30/500 PRN. Allergies: NKDA. SH: lives alone, daughter nearby.
 
 O/E: looks tired, warm peripheries. Obs: T 38.4, HR 108, BP 106/64, RR 20, SpO2 97% air. Abdo: soft, mild suprapubic tenderness, no guarding. No renal angle tenderness noted. Chest clear. HS normal.
 
@@ -884,7 +884,7 @@ Repeat bloods AM.
 Admit to medical ward.
 
 NURSING HANDOVER — 02/04/2026 07:00
-Settled overnight after fluids. Passed urine x2, still uncomfortable. Obs stable, T 37.8. Took morning meds. Awaiting doctor review.
+Settled overnight after fluids. Passed urine x2, still uncomfortable. Obs stable, T 37.8. Took morning meds. Drug chart allergy box states allergic to penicillin, reaction not recorded. Awaiting doctor review.
 
 WARD ROUND — 02/04/2026 11:40 — Dr P. Sandhu, Registrar
 Feels a bit better. Obs: T 37.6, HR 96, BP 112/70. Abdo soft, still mildly tender suprapubically. Bloods: WCC 15.2, CRP 138, Cr 112.
