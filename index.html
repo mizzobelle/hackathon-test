@@ -6,35 +6,39 @@
 <title>AuditPilot — clinical audit documentation checker</title>
 <style>
   :root{
-    --ink:#12303a; --muted:#63797f; --line:#e0eaeb; --paper:#fff; --wash:#f4f8f8;
-    --teal:#087f79; --teal-dark:#05635f; --soft:#e3f2f0;
-    --met:#0f7a4a; --met-bg:#e8f5ee; --notmet:#a92c2c; --notmet-bg:#fbecea;
-    --nodoc:#9a6206; --nodoc-bg:#fdf2de; --review:#5b3ea8; --review-bg:#f0ebfb;
+    /* NHS identity palette */
+    --blue:#005EB8; --dark-blue:#003087; --bright-blue:#0072CE; --light-blue:#41B6E6;
+    --ink:#212B32; --ink-2:#4C6272; --muted:#768692;
+    --line:#D8DDE0; --line-2:#AEB7BD; --paper:#fff; --wash:#F0F4F5;
+    --soft:#E8F1FA;
+    --met:#006435; --met-bg:#E6F2EC;
+    --notmet:#9B1D5F; --notmet-bg:#FBE9F2;
+    --nodoc:#8A5200; --nodoc-bg:#FDF0DE;
   }
   *{box-sizing:border-box}
   body{margin:0;color:var(--ink);background:var(--wash);font-size:15px;
     font-family:"Avenir Next",Avenir,"Segoe UI",system-ui,sans-serif;line-height:1.5}
-  a{color:var(--teal-dark)}
-  h2{margin:0 0 10px;font-size:.72rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:#4a656b}
+  a{color:var(--dark-blue)}
+  h2{margin:0 0 10px;font-size:.72rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-2)}
   h2.mt,.mt{margin-top:22px}
   .src{margin:6px 0 0;color:var(--muted);font-size:.78rem}
-  code{padding:1px 5px;border-radius:4px;background:#eef3f3;font-size:.85em}
+  code{padding:1px 5px;border-radius:4px;background:#EDF2F5;font-size:.85em}
 
   /* ---- top bar ---- */
   .bar{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.94);
     backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
   .bar-in{display:flex;align-items:center;gap:26px;width:min(1320px,calc(100% - 40px));margin:0 auto;height:54px}
   .brand{display:flex;align-items:center;gap:9px;font-family:Georgia,serif;font-size:1.22rem;letter-spacing:-.02em}
-  .mark{width:9px;height:9px;border-radius:2px;background:var(--teal)}
+  .mark{width:9px;height:9px;border-radius:2px;background:var(--blue)}
   .tabs{display:flex;gap:2px;margin-right:auto}
-  .tab{padding:7px 14px;border:0;border-radius:7px;background:none;color:#5c7176;
+  .tab{padding:7px 14px;border:0;border-radius:7px;background:none;color:var(--ink-2);
     font:inherit;font-size:.83rem;font-weight:700;cursor:pointer}
-  .tab:hover:not(:disabled){background:#eef3f3;color:var(--ink)}
-  .tab.on{background:var(--soft);color:var(--teal-dark)}
+  .tab:hover:not(:disabled){background:#EDF2F5;color:var(--ink)}
+  .tab.on{background:var(--soft);color:var(--dark-blue)}
   .tab:disabled{opacity:.38;cursor:not-allowed}
   .bar-end{display:flex;align-items:center;gap:12px}
   .hstat{color:var(--muted);font-size:.78rem;font-variant-numeric:tabular-nums}
-  .pill{padding:4px 10px;border:1px solid #d6e6e4;border-radius:99px;color:var(--teal-dark);
+  .pill{padding:4px 10px;border:1px solid #BBD3EC;border-radius:99px;color:var(--dark-blue);
     font-size:.66rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase}
 
   .shell{width:min(1320px,calc(100% - 40px));margin:0 auto;padding:22px 0 40px}
@@ -45,7 +49,7 @@
   .card{padding:20px 22px;border:1px solid var(--line);border-radius:12px;background:var(--paper)}
   .card.pad0{padding:0;overflow:hidden}
   .card-head{display:flex;align-items:center;justify-content:space-between;gap:14px;
-    padding:14px 20px;border-bottom:1px solid var(--line);background:#fafcfc}
+    padding:14px 20px;border-bottom:1px solid var(--line);background:#F7FAFB}
   .card-head.flat{border:0;background:none;padding:0 0 14px}
   .card-head h2{margin:0}
   .hgroup{display:flex;gap:7px}
@@ -55,74 +59,74 @@
   @media (max-width:1080px){.grid2,.grid-table,.quad{grid-template-columns:1fr}}
 
   /* ---- form ---- */
-  label.lbl{display:block;margin:14px 0 6px;color:#3a565c;font-size:.72rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
+  label.lbl{display:block;margin:14px 0 6px;color:var(--ink-2);font-size:.72rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
   select,textarea,input[type=password],input[type=text],input[type=date]{width:100%;border:1px solid var(--line);
-    border-radius:8px;padding:9px 11px;color:var(--ink);background:#fbfdfd;font:inherit;font-size:.86rem;outline:none}
-  select:focus,textarea:focus,input:focus{border-color:var(--teal);background:#fff;box-shadow:0 0 0 3px rgba(8,127,121,.12)}
+    border-radius:8px;padding:9px 11px;color:var(--ink);background:#FBFCFD;font:inherit;font-size:.86rem;outline:none}
+  select:focus,textarea:focus,input:focus{border-color:var(--blue);background:#fff;box-shadow:0 0 0 3px rgba(0,94,184,.16)}
   textarea{resize:vertical;line-height:1.55;font-size:.83rem}
   #notes{min-height:270px}
   .apirow{display:none;margin-top:8px}
   .apirow.on{display:block}
   .btnrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
   button{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:0;border-radius:8px;
-    padding:10px 16px;color:#fff;background:var(--teal);font:inherit;font-size:.84rem;font-weight:700;cursor:pointer;
+    padding:10px 16px;color:#fff;background:var(--blue);font:inherit;font-size:.84rem;font-weight:700;cursor:pointer;
     transition:background .15s,box-shadow .15s}
-  button:hover:not(:disabled){background:var(--teal-dark)}
+  button:hover:not(:disabled){background:var(--dark-blue)}
   button:disabled{opacity:.45;cursor:not-allowed}
-  button.ghost{color:var(--teal-dark);background:var(--soft)}
-  button.ghost:hover:not(:disabled){color:#fff;background:var(--teal)}
-  button.quiet{color:#5c7176;background:#eef3f3}
-  button.quiet:hover:not(:disabled){color:#fff;background:#8ba1a5}
+  button.ghost{color:var(--dark-blue);background:var(--soft)}
+  button.ghost:hover:not(:disabled){color:#fff;background:var(--blue)}
+  button.quiet{color:var(--ink-2);background:#EDF2F5}
+  button.quiet:hover:not(:disabled){color:#fff;background:var(--ink-2)}
   button.tiny{padding:6px 11px;font-size:.76rem}
 
   /* ---- disclosure ---- */
-  details.mini{margin-top:14px;border:1px solid var(--line);border-radius:9px;background:#fcfdfd}
+  details.mini{margin-top:14px;border:1px solid var(--line);border-radius:9px;background:#FBFCFD}
   details.mini>summary{padding:9px 13px;font-size:.79rem;font-weight:700;cursor:pointer;list-style:none;
-    display:flex;justify-content:space-between;align-items:center;color:#3f585e}
+    display:flex;justify-content:space-between;align-items:center;color:var(--ink-2)}
   details.mini>summary::-webkit-details-marker{display:none}
-  details.mini>summary::after{content:"+";color:var(--teal);font-weight:800}
+  details.mini>summary::after{content:"+";color:var(--blue);font-weight:800}
   details.mini[open]>summary{border-bottom:1px solid var(--line)}
   details.mini[open]>summary::after{content:"–"}
   .crit-list,.prep-list,.samples,.safe{margin:0;padding:8px 13px 11px;list-style:none}
-  .crit-list li{padding:5px 0;font-size:.79rem;color:#3f585e;border-bottom:1px solid #eef3f3}
+  .crit-list li{padding:5px 0;font-size:.79rem;color:var(--ink-2);border-bottom:1px solid #EDF2F5}
   .crit-list li:last-child{border:0}
   .crit-list b{color:var(--ink)}
   .prep-list li{display:flex;gap:8px;align-items:flex-start;padding:4px 0;font-size:.79rem}
-  .prep-list input{margin-top:3px;accent-color:var(--teal);width:14px;height:14px;flex:none}
+  .prep-list input{margin-top:3px;accent-color:var(--blue);width:14px;height:14px;flex:none}
   .samples li{display:flex;flex-direction:column;padding:8px 10px;margin-bottom:4px;border-radius:7px;cursor:pointer}
   .samples li:hover{background:var(--soft)}
   .samples b{font-size:.82rem}
   .samples span{color:var(--muted);font-size:.74rem}
-  .safe li{padding:3px 0;font-size:.79rem;color:#3f585e}
+  .safe li{padding:3px 0;font-size:.79rem;color:var(--ink-2)}
   details.mini>p{margin:0;padding:0 13px 12px;color:var(--muted);font-size:.75rem}
 
   /* ---- scope bar ---- */
   .scopebar{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px}
   .stat{padding:5px 11px;border-radius:99px;background:#fff;border:1px solid var(--line);
-    font-size:.77rem;font-weight:700;color:#3f585e}
-  .stat.g{background:var(--met-bg);color:var(--met);border-color:#cbe8d8}
-  .stat.a{background:var(--nodoc-bg);color:var(--nodoc);border-color:#f2ddb4}
-  .stat.r{background:var(--notmet-bg);color:var(--notmet);border-color:#f2cecc}
-  .stat.p{background:var(--review-bg);color:var(--review);border-color:#dbd0f3}
+    font-size:.77rem;font-weight:700;color:var(--ink-2)}
+  .stat.g{background:var(--met-bg);color:var(--met);border-color:#BFDDCE}
+  .stat.a{background:var(--nodoc-bg);color:var(--nodoc);border-color:#EFD9AE}
+  .stat.r{background:var(--notmet-bg);color:var(--notmet);border-color:#F2C7DC}
+  .stat.p{background:var(--review-bg);color:var(--review);border-color:#F2C7DC}
 
   /* ---- table ---- */
   #results{max-height:70vh;overflow:auto}
   table{border-collapse:collapse;width:100%;font-size:.79rem}
   th,td{border-bottom:1px solid var(--line);padding:7px 5px;text-align:left}
-  thead th{position:sticky;top:0;z-index:2;background:#fff;color:#4a656b;font-size:.65rem;font-weight:800;
+  thead th{position:sticky;top:0;z-index:2;background:#fff;color:var(--ink-2);font-size:.65rem;font-weight:800;
     letter-spacing:.05em;text-transform:uppercase;border-bottom:2px solid var(--line);min-width:60px}
   thead th:first-child{padding-left:18px;min-width:104px}
   tbody td:first-child{padding-left:18px}
-  tbody tr:hover{background:#fafcfc}
-  tfoot td{font-size:.69rem;font-weight:800;color:#4a656b;border-top:2px solid var(--line);border-bottom:0}
+  tbody tr:hover{background:#F7FAFB}
+  tfoot td{font-size:.69rem;font-weight:800;color:var(--ink-2);border-top:2px solid var(--line);border-bottom:0}
   .case-name{font-weight:700}
   .case-name span{display:block;color:var(--muted);font-weight:400;font-size:.71rem}
   .chip{display:block;width:100%;padding:5px 3px;border-radius:6px;border:1px solid transparent;
     font-size:.66rem;font-weight:800;text-align:center;white-space:nowrap;cursor:pointer}
-  .chip.met{background:var(--met-bg);color:var(--met);border-color:#c3e4d3}
-  .chip.notmet{background:var(--notmet-bg);color:var(--notmet);border-color:#f0c8c6}
-  .chip.nodoc{background:var(--nodoc-bg);color:var(--nodoc);border-color:#efd8a9}
-  .chip.review{background:var(--review-bg);color:var(--review);border-color:#d7cbf1}
+  .chip.met{background:var(--met-bg);color:var(--met);border-color:#BFDDCE}
+  .chip.notmet{background:var(--notmet-bg);color:var(--notmet);border-color:#F2C7DC}
+  .chip.nodoc{background:var(--nodoc-bg);color:var(--nodoc);border-color:#EFD9AE}
+  .chip.review{background:var(--review-bg);color:var(--review);border-color:#F2C7DC}
   .chip.sel{box-shadow:0 0 0 2px var(--ink)}
 
   /* ---- evidence ---- */
@@ -130,7 +134,7 @@
   .ev-empty{color:var(--muted);font-size:.8rem}
   .evbox .who{color:var(--muted);font-size:.68rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
   .evbox .crit{margin:5px 0 9px;font-weight:700;font-size:.87rem}
-  .evbox blockquote{margin:0;padding:10px 12px;border-radius:7px;background:#fbfdfd;border:1px dashed #cfe0e0;
+  .evbox blockquote{margin:0;padding:10px 12px;border-radius:7px;background:#FBFCFD;border:1px dashed var(--line);
     font-family:Georgia,serif;font-size:.86rem}
   .evbox .why{margin:9px 0 0;color:var(--muted);font-size:.78rem}
 
@@ -139,28 +143,28 @@
   .tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
   .doc .tiles{grid-template-columns:repeat(4,minmax(0,1fr))}
   @media (max-width:900px){.doc .tiles{grid-template-columns:1fr 1fr}}
-  .tile{padding:13px 15px;border:1px solid var(--line);border-radius:9px;background:#fcfdfd}
+  .tile{padding:13px 15px;border:1px solid var(--line);border-radius:9px;background:#FBFCFD}
   .tile .v{font-size:1.7rem;font-weight:750;letter-spacing:-.03em;line-height:1.05}
-  .tile .k{margin-top:3px;color:#4a656b;font-size:.73rem;font-weight:700}
-  .tile .sub{color:#9aa8ab;font-size:.7rem}
+  .tile .k{margin-top:3px;color:var(--ink-2);font-size:.73rem;font-weight:700}
+  .tile .sub{color:var(--muted);font-size:.7rem}
   .figure svg{display:block;width:100%;height:auto;overflow:visible}
   .cap{font-size:.8rem;font-weight:700}
   .capsub{margin:2px 0 10px;color:var(--muted);font-size:.75rem}
-  .legend{display:flex;gap:12px;flex-wrap:wrap;margin:0 0 10px;font-size:.72rem;color:#52514e}
+  .legend{display:flex;gap:12px;flex-wrap:wrap;margin:0 0 10px;font-size:.72rem;color:var(--ink-2)}
   .legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
-  .ax{fill:#898781;font-size:11px}
-  .axlab{fill:#52514e;font-size:11.5px}
-  .val{fill:#0b0b0b;font-size:11.5px;font-weight:700;font-variant-numeric:tabular-nums}
-  .grid{stroke:#e1e0d9;stroke-width:1}
-  .base{stroke:#c3c2b7;stroke-width:1}
+  .ax{fill:var(--muted);font-size:11px}
+  .axlab{fill:var(--ink-2);font-size:11.5px}
+  .val{fill:var(--ink);font-size:11.5px;font-weight:700;font-variant-numeric:tabular-nums}
+  .grid{stroke:#E4EAEE;stroke-width:1}
+  .base{stroke:var(--line-2);stroke-width:1}
   .seg{cursor:pointer}
   .seg:hover{opacity:.82}
-  .seg-ctl{display:flex;gap:3px;padding:3px;border-radius:8px;background:#eef3f3}
-  .seg-ctl button{padding:5px 10px;border-radius:6px;background:none;color:#5c7176;font-size:.74rem;font-weight:700}
-  .seg-ctl button.on{background:#fff;color:var(--teal-dark)}
-  .seg-ctl button:hover:not(.on){background:#e3ebeb;color:var(--ink)}
+  .seg-ctl{display:flex;gap:3px;padding:3px;border-radius:8px;background:#EDF2F5}
+  .seg-ctl button{padding:5px 10px;border-radius:6px;background:none;color:var(--ink-2);font-size:.74rem;font-weight:700}
+  .seg-ctl button.on{background:#fff;color:var(--dark-blue)}
+  .seg-ctl button:hover:not(.on){background:#DCE4E9;color:var(--ink)}
   #tip{position:fixed;z-index:60;display:none;max-width:250px;padding:8px 10px;border-radius:7px;
-    background:#12303a;color:#fff;font-size:.75rem;line-height:1.45;pointer-events:none}
+    background:var(--ink);color:#fff;font-size:.75rem;line-height:1.45;pointer-events:none}
   #tip b{display:block;margin-bottom:2px}
 
   .gaplist{margin:0;padding:0;list-style:none;font-size:.81rem}
@@ -177,44 +181,44 @@
   /* ---- report ---- */
   .report-wrap{display:grid;grid-template-columns:212px minmax(0,1fr);gap:18px;align-items:start}
   .builder{position:sticky;top:70px;padding:16px 17px;border:1px solid var(--line);border-radius:12px;background:#fff}
-  .builder h3{margin:0 0 10px;font-size:.72rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:#4a656b}
+  .builder h3{margin:0 0 10px;font-size:.72rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-2)}
   .bgroup{margin-top:15px;padding-top:12px;border-top:1px solid var(--line)}
   .bgroup:first-of-type{border-top:0;padding-top:0;margin-top:0}
-  .blabel{margin-bottom:7px;color:#4a656b;font-size:.65rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase}
+  .blabel{margin-bottom:7px;color:var(--ink-2);font-size:.65rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase}
   .bopt{display:flex;gap:7px;align-items:flex-start;margin-bottom:6px;font-size:.77rem;cursor:pointer;line-height:1.3}
-  .bopt input{margin-top:2px;accent-color:var(--teal);width:13px;height:13px;flex:none}
-  .prog{height:5px;border-radius:99px;background:#e9f0f0;overflow:hidden}
-  .prog-bar{height:100%;background:var(--teal);transition:width .25s}
+  .bopt input{margin-top:2px;accent-color:var(--blue);width:13px;height:13px;flex:none}
+  .prog{height:5px;border-radius:99px;background:#E4EAEE;overflow:hidden}
+  .prog-bar{height:100%;background:var(--blue);transition:width .25s}
 
   .doc{padding:26px 30px;border:1px solid var(--line);border-radius:12px;background:#fff}
   .draft{margin:0 0 20px;padding:10px 13px;border-radius:8px;border-left:3px solid var(--nodoc);
-    background:var(--nodoc-bg);color:#6d4703;font-size:.79rem}
+    background:var(--nodoc-bg);color:#8A5200;font-size:.79rem}
   .draft b{display:block}
-  .draft.ready{border-left-color:var(--met);background:var(--met-bg);color:#0c5c39}
+  .draft.ready{border-left-color:var(--met);background:var(--met-bg);color:#006435}
   .doc-head{padding-bottom:14px;border-bottom:2px solid var(--ink);margin-bottom:20px}
   .doc-head h3{margin:0;font-family:Georgia,serif;font-size:1.4rem;font-weight:400;letter-spacing:-.02em}
   .doc-head p{margin:5px 0 0;color:var(--muted);font-size:.78rem}
-  .doc h4{margin:24px 0 9px;font-size:.68rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:#4a656b}
+  .doc h4{margin:24px 0 9px;font-size:.68rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-2)}
   .doc h4:first-of-type{margin-top:0}
-  .figure{margin-bottom:4px;padding:15px 17px;border:1px solid var(--line);border-radius:10px;background:#fcfcfb}
-  .lock,.tagx{margin-left:7px;padding:2px 6px;border-radius:99px;background:#eef3f3;color:#5c7176;
+  .figure{margin-bottom:4px;padding:15px 17px;border:1px solid var(--line);border-radius:10px;background:#FBFCFD}
+  .lock,.tagx{margin-left:7px;padding:2px 6px;border-radius:99px;background:#EDF2F5;color:var(--ink-2);
     font-size:.58rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;vertical-align:2px}
   .tagx{background:var(--nodoc-bg);color:#7a4e05}
-  .tagx.edit{background:var(--soft);color:var(--teal-dark)}
+  .tagx.edit{background:var(--soft);color:var(--dark-blue)}
 
   .nsec{margin-bottom:10px;border:1px solid var(--line);border-radius:9px;overflow:hidden}
-  .nsec.done{border-color:#c9e6d7}
+  .nsec.done{border-color:#BFDDCE}
   .nhead{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
-    padding:8px 13px;border-bottom:1px solid var(--line);background:#fafcfc}
-  .nsec.done .nhead{background:var(--met-bg);border-bottom-color:#d5ebe0}
-  .ntitle{font-size:.66rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#4a656b}
+    padding:8px 13px;border-bottom:1px solid var(--line);background:#F7FAFB}
+  .nsec.done .nhead{background:var(--met-bg);border-bottom-color:#BFDDCE}
+  .ntitle{font-size:.66rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2)}
   .nact{display:flex;gap:11px;align-items:center}
-  .chk{display:flex;gap:5px;align-items:center;font-size:.73rem;color:#4a656b;cursor:pointer}
-  .chk input{accent-color:var(--teal);width:13px;height:13px}
-  .linkbtn{padding:0;background:none;color:var(--teal-dark);font-size:.72rem;text-decoration:underline}
+  .chk{display:flex;gap:5px;align-items:center;font-size:.73rem;color:var(--ink-2);cursor:pointer}
+  .chk input{accent-color:var(--blue);width:13px;height:13px}
+  .linkbtn{padding:0;background:none;color:var(--dark-blue);font-size:.72rem;text-decoration:underline}
   .linkbtn:hover{background:none;color:var(--ink)}
   .nbody{padding:12px 14px;font-family:Georgia,serif;font-size:.9rem;line-height:1.6;outline:none}
-  .nbody:focus{background:#fffdf5;box-shadow:inset 0 0 0 2px rgba(8,127,121,.16)}
+  .nbody:focus{background:#fffdf5;box-shadow:inset 0 0 0 2px rgba(0,94,184,.18)}
 
   table.stats{font-size:.78rem}
   table.stats td.num,table.stats th.num{text-align:right;font-variant-numeric:tabular-nums}
@@ -224,8 +228,8 @@
   .pin{width:100%;min-height:0;border:1px solid var(--line);border-radius:6px;padding:6px 8px;font:inherit;
     font-size:.77rem;line-height:1.4;background:#fff;color:var(--ink);outline:none;resize:vertical}
   textarea.pin{height:66px}
-  .kindtag{display:inline-block;margin-top:4px;padding:2px 6px;border-radius:99px;background:#eef3f3;
-    color:#5c7176;font-size:.6rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase}
+  .kindtag{display:inline-block;margin-top:4px;padding:2px 6px;border-radius:99px;background:#EDF2F5;
+    color:var(--ink-2);font-size:.6rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase}
   .sub2{color:var(--muted);font-size:.71rem;font-weight:400}
   .ip{margin:22px 0 0;padding-top:12px;border-top:1px solid var(--line);color:var(--muted);font-size:.72rem;line-height:1.5}
 
@@ -235,6 +239,33 @@
   .foot details.mini{margin:0;flex:1 1 320px;max-width:640px;background:none;border-color:var(--line)}
   .foot details.mini>summary{gap:20px}
 
+
+  /* ---- welcome ---- */
+  .hero{padding:36px 38px;border:1px solid var(--line);border-radius:14px;background:#fff;
+    border-top:5px solid var(--blue)}
+  .hero h1{margin:0;font-size:clamp(1.7rem,3.4vw,2.5rem);font-weight:700;letter-spacing:-.025em;line-height:1.1;
+    max-width:20ch;color:var(--dark-blue)}
+  .hero p{margin:16px 0 24px;max-width:62ch;color:var(--ink-2);font-size:1rem}
+  .hero button{padding:13px 24px;font-size:.92rem}
+  .prep-list.big li{padding:9px 0;border-bottom:1px solid var(--line);font-size:.85rem;align-items:flex-start}
+  .prep-list.big li:last-child{border:0}
+  .prep-list.big b{display:block;color:var(--ink)}
+  .prep-list.big label{color:var(--ink-2)}
+  .steps{margin:0;padding-left:20px;font-size:.85rem;color:var(--ink-2)}
+  .steps li{margin-bottom:9px}
+  .steps b{display:block;color:var(--ink)}
+  .nots{margin:0;padding:0;list-style:none;font-size:.83rem;color:var(--ink-2)}
+  .nots li{position:relative;padding:5px 0 5px 20px}
+  .nots li::before{content:"×";position:absolute;left:2px;top:5px;color:var(--notmet);font-weight:800}
+  .brand{cursor:pointer}
+
+  /* ---- builder drag ---- */
+  #blocks{margin:0;padding:0;list-style:none}
+  #blocks li{align-items:center;gap:6px;padding:6px 5px;border-radius:6px;background:#fff;cursor:grab}
+  #blocks li:hover{background:#EDF2F5}
+  #blocks li.dragging{opacity:.4}
+  #blocks li.over{box-shadow:inset 0 2px 0 var(--blue)}
+  .drag{color:var(--line-2);font-size:.85rem;line-height:1;cursor:grab}
   @media print{
     .bar,.foot,.builder,.draft,.lock,.tagx,.nact,.card-head{display:none !important}
     body{background:#fff}
@@ -256,7 +287,8 @@
   <div class="bar-in">
     <div class="brand"><span class="mark"></span>AuditPilot</div>
     <nav class="tabs" id="tabs">
-      <button class="tab on" data-view="setup">Set up</button>
+      <button class="tab on" data-view="welcome">Start</button>
+      <button class="tab" data-view="setup">Set up</button>
       <button class="tab" data-view="table" disabled>Table</button>
       <button class="tab" data-view="findings" disabled>Findings</button>
       <button class="tab" data-view="report" disabled>Report</button>
@@ -267,8 +299,55 @@
 
 <main class="shell">
 
+<!-- ============ WELCOME ============ -->
+<section class="view on" id="v-welcome">
+  <div class="hero">
+    <h1>Clinical audit, without the evening</h1>
+    <p>AuditPilot reads case notes against a published standard and builds the audit table for you —
+      one row per patient, one column per criterion, with the source sentence behind every judgement.
+      It checks the record. It never assesses clinical care.</p>
+    <button id="begin">Begin an audit</button>
+  </div>
+
+  <div class="grid2 mt">
+    <div class="card">
+      <h2>Before you start</h2>
+      <p class="src">An audit is a method, not a search. Work through this before collecting anything.</p>
+      <ul class="prep-list big">
+        <li><input type="checkbox" id="p1"><label for="p1"><b>A published standard exists</b>
+          NICE, a Royal College, or trust policy — you are measuring against something written down.</label></li>
+        <li><input type="checkbox" id="p2"><label for="p2"><b>Nobody has audited it recently</b>
+          Check with your supervisor or the audit/QI department first.</label></li>
+        <li><input type="checkbox" id="p3"><label for="p3"><b>Registered with audit/QI</b>
+          Most trusts require registration before data collection.</label></li>
+        <li><input type="checkbox" id="p4"><label for="p4"><b>The sample is defined</b>
+          Typically 30–50 patients from the last 1–3 months, with a clear inclusion criterion.</label></li>
+        <li><input type="checkbox" id="p5"><label for="p5"><b>Criteria are fixed before you start</b>
+          They must not change mid-audit, or it stops being an audit.</label></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>How it works</h2>
+      <ol class="steps">
+        <li><b>Set up</b> Choose a standard — antimicrobial prescribing, VTE risk, or your own criteria — and paste the notes.</li>
+        <li><b>Table</b> Every case checked against every criterion. Click any cell for the sentence behind it.</li>
+        <li><b>Findings</b> Where the record falls short, which gaps travel together, and which wards or shifts.</li>
+        <li><b>Report</b> A draft you edit, with an action plan carrying an owner and a date.</li>
+      </ol>
+      <h2 class="mt">What it will not do</h2>
+      <ul class="nots">
+        <li>Judge clinical care, suggest treatment, or comment on a decision</li>
+        <li>Assume something happened because the patient improved</li>
+        <li>Choose between two statements that contradict each other</li>
+        <li>Store anything — no database, no login, nothing kept on refresh</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
 <!-- ============ SET UP ============ -->
-<section class="view on" id="v-setup">
+<section class="view" id="v-setup">
   <div class="grid2">
     <div class="card">
       <h2>Standard</h2>
@@ -285,7 +364,7 @@
       <div id="custom-view" style="display:none">
         <label class="lbl" for="custom-crit">One criterion per line</label>
         <textarea id="custom-crit" rows="5" placeholder="Pain score recorded within 30 minutes&#10;Analgesia given within 60 minutes"></textarea>
-        <p class="src">Keyword matching only — every hit is marked <b>Needs review</b>. Use the Claude engine for full custom checking.</p>
+        <p class="src">Keyword matching only — every hit is marked <b>Not met</b> until confirmed. Use the Claude engine for full custom checking.</p>
       </div>
 
       <h2 class="mt">Engine</h2>
@@ -297,16 +376,6 @@
         <input type="password" id="apikey" placeholder="Anthropic API key — memory only" autocomplete="off">
       </div>
 
-      <details class="mini mt">
-        <summary>Before you start</summary>
-        <ul class="prep-list">
-          <li><input type="checkbox" id="p1"><label for="p1">A published standard exists for this topic</label></li>
-          <li><input type="checkbox" id="p2"><label for="p2">Nobody has audited it recently</label></li>
-          <li><input type="checkbox" id="p3"><label for="p3">Registered with audit/QI if required</label></li>
-          <li><input type="checkbox" id="p4"><label for="p4">Sample defined — 30–50 cases, clear inclusion</label></li>
-          <li><input type="checkbox" id="p5"><label for="p5">Criteria fixed before starting</label></li>
-        </ul>
-      </details>
     </div>
 
     <div class="card">
@@ -362,11 +431,11 @@
   <div class="card-head flat">
     <h2>Audit report</h2>
     <div class="hgroup">
-      <button class="ghost tiny" id="report-btn" disabled>Draft report</button>
       <button class="quiet tiny" id="copy-btn" style="display:none">Copy</button>
-      <button class="quiet tiny" id="print-btn" style="display:none">Print / PDF</button>
+      <button class="ghost tiny" id="print-btn" style="display:none">Print / PDF</button>
     </div>
   </div>
+  <p class="src" id="report-empty">Run a check first — the report is drafted from the confirmed table.</p>
   <div id="report-wrap" class="report-wrap" style="display:none">
     <aside id="builder" class="builder"></aside>
     <div id="report-doc"></div>
@@ -379,7 +448,7 @@
     <ul class="safe">
       <li><b>Documentation only.</b> Never a judgement on clinical care.</li>
       <li><b>Every judgement quotes its source.</b> No quote means <i>Not documented</i>, never an assumption.</li>
-      <li><b>Conflicts stop the machine.</b> Contradictory notes return <i>Needs review</i>.</li>
+      <li><b>Conflicts stop the machine.</b> Where the record contradicts itself the cell is <i>Not met</i> and flagged to resolve — never a guess between the two.</li>
       <li><b>The clinician signs off each row</b> before it reaches the report.</li>
       <li><b>Actions change the record, not the care</b> — form fields, system settings, ward routines. Never a drug, dose or threshold.</li>
       <li><b>Nothing stored.</b> No database, no login, no localStorage.</li>
@@ -395,9 +464,12 @@
 <script>
 /* ============================ CRITERIA ENGINE ============================ */
 
-const MET='met', NOTMET='notmet', NODOC='nodoc', REVIEW='review';
-const LABEL={met:'Met',notmet:'Not met',nodoc:'Not documented',review:'Needs review'};
-const SHORT={met:'Met',notmet:'Not met',nodoc:'Not doc.',review:'Review'};
+const MET='met', NOTMET='notmet', NODOC='nodoc';
+const LABEL={met:'Met',notmet:'Not met',nodoc:'Not documented'};
+const SHORT={met:'Met',notmet:'Not met',nodoc:'Not doc.'};
+/* A cell can be Not met for two reasons: the notes document a failure, or the notes
+   contradict themselves. The second carries conflict:true — AuditPilot never picks a
+   side, and the count is surfaced separately so the clinician can resolve them. */
 const NOEV='No relevant documentation found.';
 
 function sentences(text){
@@ -441,7 +513,7 @@ const TEMPLATES={
        check:s=>{
          const nkda=findSentence(s,/\b(NKDA|no known (drug )?allerg\w*|nil known allerg\w*)\b/i);
          const spec=findSentence(s,/\ballerg\w*[^.;]*\b(penicillin|amoxicillin|co-?amoxiclav|macrolide|sulfonamide|cephalosporin|clarithromycin|trimethoprim)\b|\b(penicillin|amoxicillin|macrolide|cephalosporin)\b[^.;]*\ballerg/i);
-         if(nkda&&spec) return {status:REVIEW, evidence:nkda+'  ⟷  '+spec,
+         if(nkda&&spec) return {status:NOTMET, conflict:true, evidence:nkda+'  ⟷  '+spec,
            why:'The record contains two contradictory allergy statements. AuditPilot will not choose between them — a clinician must resolve this before the row is scored.'};
          const e=nkda||spec||findSentence(s,/\ballerg/i);
          return e?ok(e):nodoc('No allergy status recorded anywhere in the notes.');
@@ -465,7 +537,7 @@ const TEMPLATES={
          if(!samp) return nodoc('No cultures or samples documented, and no reason recorded for not sending them.');
          if(/\b(prior to|before|pre[- ]?dose|on admission)\b/i.test(samp)) return ok(samp);
          if(/\bafter\b/i.test(samp)) return {status:NOTMET, evidence:samp, why:'Samples are documented as taken after the first dose.'};
-         return {status:REVIEW, evidence:samp,
+         return {status:NOTMET, conflict:true, evidence:samp,
            why:'Samples are documented, but their timing relative to the first antibiotic dose is not. AuditPilot will not assume it — please confirm from the drug chart.'};
        }},
       {short:'48–72h review', name:'48–72h antibiotic review documented',
@@ -527,7 +599,7 @@ function customCriteria(lines){
           const n=keys.filter(k=>low.includes(k)).length;
           if(n>bestN){bestN=n;best=sent;}
         }
-        if(bestN>=2) return {status:REVIEW, evidence:best,
+        if(bestN>=2) return {status:NOTMET, conflict:true, evidence:best,
           why:'The built-in engine matched this by keyword only. It cannot verify the criterion is genuinely met — confirm the quoted sentence, or run the check with Claude.'};
         return nodoc('No sentence in the notes matched this criterion by keyword.');
       }};
@@ -563,11 +635,11 @@ function runLocal(cases, tpl){
 const SYSTEM=`You are an audit documentation checker. You never judge the quality of clinical care. You only check whether documentation in the notes meets each audit criterion.
 
 For EACH criterion return:
-- status: "met", "notmet", "nodoc", or "review"
+- status: "met", "notmet", or "nodoc"
   - "met": the notes explicitly document it.
-  - "notmet": the notes document that it was NOT done, or document something that fails the criterion.
+  - "notmet": the notes document that it was NOT done, document something that fails the criterion, OR are internally contradictory or ambiguous on this point.
   - "nodoc": nothing in the notes relates to the criterion. The care may have happened; the notes do not show it.
-  - "review": the notes are internally contradictory or ambiguous on this point. Never guess between conflicting statements — return "review" and explain the conflict.
+- conflict: true only when the status is "notmet" because the record contradicts itself or is ambiguous. Never guess between conflicting statements — set conflict true and explain the conflict in "why".
 - evidence: the EXACT sentence or phrase from the notes, quoted verbatim. If status is "nodoc", evidence must be exactly "No relevant documentation found."
 - why: one short sentence explaining the status.
 
@@ -575,9 +647,9 @@ Never infer beyond the text. If the notes do not state it, it is "nodoc", even i
 
 async function runClaude(cases, tpl, key){
   const schema={type:'object',properties:{results:{type:'array',items:{type:'object',properties:{
-    criterion:{type:'string'},status:{type:'string',enum:['met','notmet','nodoc','review']},
-    evidence:{type:'string'},why:{type:'string'}},
-    required:['criterion','status','evidence','why'],additionalProperties:false}}},
+    criterion:{type:'string'},status:{type:'string',enum:['met','notmet','nodoc']},
+    conflict:{type:'boolean'},evidence:{type:'string'},why:{type:'string'}},
+    required:['criterion','status','conflict','evidence','why'],additionalProperties:false}}},
     required:['results'],additionalProperties:false};
 
   const critText=tpl.criteria.map((c,i)=>`${i+1}. ${c.name} — ${c.help}`).join('\n');
@@ -601,8 +673,8 @@ async function runClaude(cases, tpl, key){
     const parsed=JSON.parse(block.text);
     const cells=tpl.criteria.map((c,ci)=>{
       const r=parsed.results[ci]||{};
-      const st=[MET,NOTMET,NODOC,REVIEW].includes(r.status)?r.status:REVIEW;
-      return {criterion:c.name, status:st,
+      const st=[MET,NOTMET,NODOC].includes(r.status)?r.status:NOTMET;
+      return {criterion:c.name, status:st, conflict:!!r.conflict,
         evidence:(st===NODOC?NOEV:(r.evidence||NOEV)), why:r.why||''};
     });
     return {...caseLabel(text,i), text, confirmed:false, cells};
@@ -636,7 +708,8 @@ function renderSummary(){
   const {rows,tpl}=STATE;
   const N=rows.length, M=tpl.criteria.length, total=N*M;
   const count=st=>rows.reduce((a,r)=>a+r.cells.filter(c=>c.status===st).length,0);
-  const met=count(MET), nd=count(NODOC), nm=count(NOTMET), rv=count(REVIEW);
+  const met=count(MET), nd=count(NODOC), nm=count(NOTMET);
+  const rv=rows.reduce((a,r)=>a+r.cells.filter(c=>c.conflict).length,0);
   const confirmed=rows.filter(r=>r.confirmed).length;
 
   $('scopebar').innerHTML=
@@ -644,7 +717,7 @@ function renderSummary(){
     `<span class="stat g">${met} met</span>`+
     `<span class="stat a">${nd} not documented</span>`+
     (nm?`<span class="stat r">${nm} not met</span>`:'')+
-    (rv?`<span class="stat p">${rv} need review</span>`:'')+
+    (rv?`<span class="stat p">${rv} to resolve</span>`:'')+
     `<span class="stat">${confirmed}/${N} confirmed</span>`;
   $('hdr-status').textContent=`${N} cases · ${Math.round(100*met/total)}% documented · ${confirmed}/${N} confirmed`;
   renderFindings();
@@ -658,7 +731,7 @@ function renderTable(){
     r.cells.map((c,ci)=>
       `<td><button class="chip ${c.status}" data-r="${ri}" data-c="${ci}" title="${esc(tpl.criteria[ci].name)} — ${LABEL[c.status]}">${SHORT[c.status]}</button></td>`).join('')+
     `<td style="text-align:center"><input type="checkbox" class="confirm" data-r="${ri}" ${r.confirmed?'checked':''}
-       style="width:16px;height:16px;accent-color:var(--teal)" title="Clinician confirms this row"></td></tr>`).join('');
+       style="width:16px;height:16px;accent-color:var(--blue)" title="Clinician confirms this row"></td></tr>`).join('');
   const foot=tpl.criteria.map((c,ci)=>{
     const m=rows.filter(r=>r.cells[ci].status===MET).length;
     return `<td>${m}/${N} met</td>`;}).join('');
@@ -670,7 +743,6 @@ function renderTable(){
       <tfoot><tr><td>Column compliance</td>${foot}<td></td></tr></tfoot>
     </table></div>`;
   $('csv').disabled=false;
-  $('report-btn').disabled=false;
   $('confirm-all').disabled=false;
   document.querySelectorAll('.tab').forEach(t=>t.disabled=false);
 }
@@ -698,7 +770,7 @@ function renderFindings(){
        <div class="tile"><div class="v">${S.pct}%</div><div class="k">Documented</div><div class="sub">${S.totalMet}/${S.totalChecks} checks</div></div>
        <div class="tile"><div class="v">${S.notDoc}</div><div class="k">Not documented</div><div class="sub">${Math.round(100*S.notDoc/S.totalChecks)}% of checks</div></div>
        <div class="tile"><div class="v">${S.full}<span style="font-size:1rem;color:#9aa8ab">/${N}</span></div><div class="k">Fully compliant</div><div class="sub">all ${M} criteria</div></div>
-       <div class="tile"><div class="v">${S.needsReview}</div><div class="k">Need review</div><div class="sub">record unclear</div></div>
+       <div class="tile"><div class="v">${S.needsReview}</div><div class="k">To resolve</div><div class="sub">record contradicts itself</div></div>
      </div>
      ${S.priority.length?`<div class="priority mt">
        <b>${S.priority.length} of ${M} criteria = ${S.priorityShare}% of all gaps.</b>
@@ -1075,8 +1147,9 @@ $('clear').addEventListener('click',()=>{
   $('notes').value=''; STATE=null;
   $('scopebar').innerHTML='';
   $('err').style.display='none';
-  $('report-wrap').style.display='none'; $('copy-btn').style.display='none'; $('print-btn').style.display='none';
-  $('csv').disabled=true; $('report-btn').disabled=true; $('confirm-all').disabled=true;
+  $('report-wrap').style.display='none'; $('report-empty').style.display='block';
+  $('copy-btn').style.display='none'; $('print-btn').style.display='none';
+  $('csv').disabled=true; $('confirm-all').disabled=true;
   $('confirm-all').textContent='Confirm all rows';
   $('results').innerHTML='<p class="src" style="padding:26px 20px">Load a sample case and press <b>Check documentation</b>.</p>';
   $('findings').innerHTML=''; $('evidence').innerHTML=EV_EMPTY;
@@ -1103,11 +1176,14 @@ $('csv').addEventListener('click',()=>{
    adjacent CVD ΔE 16.2 (protan), normal-vision ΔE 30.3 — all hard checks pass.
    The amber sits below 3:1 contrast, so every segment carries a direct label
    and a full data table sits under the figures (the documented relief rule). */
-const FILL={met:'#008300', nodoc:'#eda100', review:'#4a3aa7', notmet:'#e34948'};
-const INK ={met:'#fff',    nodoc:'#0b0b0b', review:'#fff',    notmet:'#fff'};
-const ORDER=[MET,NODOC,REVIEW,NOTMET];
-const SEQ='#2a78d6';
-const RAMP=['#cde2fb','#9ec5f4','#6da7ec','#3987e5','#256abf','#184f95','#0d366b'];
+/* NHS palette, validated against a white surface: worst adjacent CVD ΔE 12.7 (protan),
+   normal-vision ΔE 29.5 — all hard checks pass. Orange sits below 3:1 contrast, so every
+   segment is directly labelled and the statistics table repeats the data. */
+const FILL={met:'#007F3B', nodoc:'#ED8B00', notmet:'#AE2573'};
+const INK ={met:'#fff',    nodoc:'#0b0b0b', notmet:'#fff'};
+const ORDER=[MET,NODOC,NOTMET];
+const SEQ='#005EB8';
+const RAMP=['#E5EFF8','#C2DAF0','#9BC3E8','#6FA9DE','#3F8BD0','#005EB8','#003087'];
 
 function legend(){
   return '<div class="legend">'+ORDER.map(s=>
@@ -1286,9 +1362,14 @@ function optionsFor(short){ return INTERVENTIONS[short]||GENERIC; }
 
 /* ---------------- report state ---------------- */
 const REPORT={
-  include:{tiles:true, fig1:true, fig2:true, matrix:false, subgroup:false, stats:true, priority:true, plan:true, narrative:true},
+  include:{narrative:true, tiles:true, fig1:true, priority:true, plan:true, stats:true, subgroup:false, fig2:false, matrix:false},
+  order:['narrative','tiles','fig1','priority','plan','stats','subgroup','fig2','matrix'],
   subgroupBy:'Ward', narrative:{}, edited:{}, reviewed:{}, plan:[], built:false
 };
+const BLOCK_LABEL={narrative:'Written report', tiles:'Summary tiles', fig1:'Figure: compliance by criterion',
+  fig2:'Figure: completeness spread', matrix:'Figure: gaps that occur together',
+  subgroup:'Figure: breakdown by subgroup', stats:'Statistics table',
+  priority:'Priority — fix these first', plan:'Action plan'};
 const SECTIONS=[['intro','Introduction'],['aim','Aim'],['standard','Standard'],['methods','Methods'],
                 ['results','Results'],['discussion','Discussion'],['conclusion','Conclusion']];
 
@@ -1312,7 +1393,8 @@ function groupBy(rows,dim,M){
 function computeStats(){
   const {rows,tpl}=STATE, N=rows.length, M=tpl.criteria.length;
   const per=tpl.criteria.map((c,ci)=>{
-    const counts={}; [MET,NOTMET,NODOC,REVIEW].forEach(s=>counts[s]=rows.filter(r=>r.cells[ci].status===s).length);
+    const counts={}; [MET,NOTMET,NODOC].forEach(s=>counts[s]=rows.filter(r=>r.cells[ci].status===s).length);
+    counts.conflict=rows.filter(r=>r.cells[ci].conflict).length;
     return {c,ci,counts,met:counts[MET],missing:N-counts[MET],pct:Math.round(100*counts[MET]/N)};
   });
   const ranked=[...per].sort((a,b)=>a.pct-b.pct);
@@ -1327,7 +1409,7 @@ function computeStats(){
   return {N,M,per,ranked,priority,priorityShare:totalMissing?Math.round(100*cum/totalMissing):0,priorityCum:cum,
     totalMet,totalChecks,totalMissing,pct:Math.round(100*totalMet/totalChecks),
     notDoc:per.reduce((a,x)=>a+x.counts[NODOC],0), notMet:per.reduce((a,x)=>a+x.counts[NOTMET],0),
-    needsReview:per.reduce((a,x)=>a+x.counts[REVIEW],0),
+    needsReview:rows.reduce((a,r)=>a+r.cells.filter(c=>c.conflict).length,0),
     dist:Array.from({length:M+1},(_,i)=>scores.filter(v=>v===i).length),
     median:N%2?sorted[(N-1)/2]:(sorted[N/2-1]+sorted[N/2])/2, mean:totalMet/N,
     min:sorted[0], max:sorted[N-1], full:scores.filter(v=>v===M).length,
@@ -1342,8 +1424,8 @@ function defaultNarrative(S){
 intro:`${t.name}. ${t.standard} sets out what the clinical record should contain for each patient in this group. Incomplete documentation cannot demonstrate that the required steps took place, regardless of the care actually delivered. This audit examines the record only and makes no assessment of clinical care.`,
 aim:`To assess whether the clinical documentation for this sample meets each of the ${M} criteria derived from the standard, and to identify where the record most often fails to demonstrate compliance.`,
 standard:`${t.standard}. Target: ${t.target}.`,
-methods:`${N} case${N>1?'s were':' was'} reviewed retrospectively against ${M} fixed criteria, applied identically to every case. Each criterion was assessed as Met, Not met, Not documented or Needs review. Every judgement is supported by a verbatim quotation from the record; where no relevant text exists the criterion is recorded as Not documented rather than assumed. Contradictory or ambiguous records were flagged for clinician resolution and not scored automatically. ${S.confirmed} of ${N} rows were confirmed by a clinician before analysis.`,
-results:`Overall documented compliance was ${S.totalMet} of ${S.totalChecks} checks (${S.pct}%), against a target of 100%. Cases documented a median of ${S.median} and a mean of ${S.mean.toFixed(1)} of the ${M} criteria (range ${S.min}–${S.max}); ${S.full} of ${N} case${S.full===1?'':'s'} (${Math.round(100*S.full/N)}%) met all ${M}. Of the ${S.totalMissing} checks not met, ${S.notDoc} ${S.notDoc===1?'was':'were'} Not documented, ${S.notMet} ${S.notMet===1?'was':'were'} Not met and ${S.needsReview} required clinician review because the record was contradictory or ambiguous. Per-criterion compliance is given in the results table and Figure 1.`,
+methods:`${N} case${N>1?'s were':' was'} reviewed retrospectively against ${M} fixed criteria, applied identically to every case. Each criterion was assessed as Met, Not met or Not documented. Every judgement is supported by a verbatim quotation from the record; where no relevant text exists the criterion is recorded as Not documented rather than assumed. Contradictory or ambiguous records were flagged for clinician resolution and not scored automatically. ${S.confirmed} of ${N} rows were confirmed by a clinician before analysis.`,
+results:`Overall documented compliance was ${S.totalMet} of ${S.totalChecks} checks (${S.pct}%), against a target of 100%. Cases documented a median of ${S.median} and a mean of ${S.mean.toFixed(1)} of the ${M} criteria (range ${S.min}–${S.max}); ${S.full} of ${N} case${S.full===1?'':'s'} (${Math.round(100*S.full/N)}%) met all ${M}. Of the ${S.totalMissing} checks not met, ${S.notDoc} ${S.notDoc===1?'was':'were'} Not documented and ${S.notMet} ${S.notMet===1?'was':'were'} Not met${S.needsReview?` — ${S.needsReview} of those because the record contradicted itself, and were referred to a clinician to resolve rather than scored automatically`:''}. Per-criterion compliance is given in the results table and Figure 1.`,
 discussion:w.length
 ? `The weakest criteria were ${w.slice(0,2).map(x=>`"${x.c.name}" (${x.pct}%)`).join(' and ')}. ${S.notDoc>S.notMet?`Almost all shortfalls are absent documentation rather than documented failures of the standard, which is consistent with the steps being carried out but not recorded. `:''}The pattern is consistent across the sample rather than confined to a few cases, which points to the design of the record — the chart, the proforma and the ward round template — rather than to individual practice. ${S.priority.length>1?`${S.priority.length} criteria account for ${S.priorityShare}% of all missing documentation, so a small number of changes to the record should recover most of the shortfall. `:''}This audit assesses the record alone; no conclusion should be drawn from it about the appropriateness of the clinical care given, and no individual clinician was identified in the analysis.`
 : `All criteria were documented in all cases reviewed. No documentation shortfall was identified in this sample. This audit assesses the record alone and makes no assessment of the clinical care given.`,
@@ -1376,30 +1458,30 @@ function buildReport(){
   $('report-wrap').style.display='grid';
   $('copy-btn').style.display='inline-flex';
   $('print-btn').style.display='inline-flex';
+  $('report-empty').style.display='none';
 }
 
 function renderBuilder(S){
   const rev=SECTIONS.filter(([k])=>REPORT.reviewed[k]).length;
-  const opts=[['tiles','Summary tiles'],['fig1','Figure: compliance by criterion'],
-    ['fig2','Figure: completeness distribution'],['matrix','Figure: gaps that occur together'],
-    ['subgroup','Figure: breakdown by subgroup'],['stats','Descriptive statistics table'],
-    ['priority','Priority — fix these first'],['plan','Action plan'],['narrative','Written report']];
   $('builder').innerHTML=
    `<h3>Report builder</h3>
-    <p class="src">Choose what the report contains.</p>
+    <p class="src">Tick to include. Drag to reorder.</p>
     <div class="bgroup">
-      <div class="blabel">Include</div>
-      ${opts.map(([k,l])=>`<label class="bopt"><input type="checkbox" data-inc="${k}" ${REPORT.include[k]?'checked':''}> ${l}</label>`).join('')}
+      <ul class="border" id="blocks">
+        ${REPORT.order.map(k=>`<li class="bopt" draggable="true" data-key="${k}">
+            <span class="drag" aria-hidden="true">⠿</span>
+            <input type="checkbox" data-inc="${k}" ${REPORT.include[k]?'checked':''}>
+            <span>${BLOCK_LABEL[k]}</span></li>`).join('')}
+      </ul>
     </div>
     ${S.dims.length?`<div class="bgroup">
       <div class="blabel">Break down by</div>
       <select id="subdim">${S.dims.map(d=>`<option ${d===REPORT.subgroupBy?'selected':''}>${d}</option>`).join('')}</select>
-      <p class="src">From fields collected with each case.</p>
     </div>`:''}
     <div class="bgroup">
-      <div class="blabel">Review progress</div>
+      <div class="blabel">Sections checked</div>
       <div class="prog"><div class="prog-bar" style="width:${Math.round(100*rev/SECTIONS.length)}%"></div></div>
-      <p class="src">${rev} of ${SECTIONS.length} sections checked.</p>
+      <p class="src">${rev} of ${SECTIONS.length} — optional.</p>
     </div>`;
 }
 
@@ -1442,79 +1524,70 @@ function planTable(S){
   a ward routine, a teaching point. None changes clinical management; none is patient-specific.</p>`;
 }
 
+const LOCKTAG='<span class="lock" title="Calculated from the confirmed table">computed</span>';
+
+const DOCBLOCK={
+ tiles:(S,x)=>`<h4>Summary ${LOCKTAG}</h4>
+  <div class="tiles">
+    <div class="tile"><div class="v">${S.pct}%</div><div class="k">Documented compliance</div><div class="sub">${S.totalMet} of ${S.totalChecks} · target 100%</div></div>
+    <div class="tile"><div class="v">${S.notDoc}</div><div class="k">Not documented</div><div class="sub">${Math.round(100*S.notDoc/S.totalChecks)}% of all checks</div></div>
+    <div class="tile"><div class="v">${S.full}<span style="font-size:1.1rem;color:#768692">/${S.N}</span></div><div class="k">Fully compliant cases</div><div class="sub">all ${S.M} criteria</div></div>
+    <div class="tile"><div class="v">${S.needsReview}</div><div class="k">To resolve</div><div class="sub">record contradicts itself</div></div>
+  </div>`,
+ fig1:(S,x)=>`<h4>Documentation status by criterion ${LOCKTAG}</h4>
+  <div class="figure"><div class="cap">Every criterion, every case — ranked worst first</div>
+    ${legend()}${svgStacked(S.ranked,S.N)}</div>`,
+ fig2:(S,x)=>`<h4>Completeness per case ${LOCKTAG}</h4>
+  <div class="figure"><div class="cap">Criteria documented per case</div>
+    ${svgHistogram(S.dist,S.M,S.N)}</div>`,
+ matrix:(S,x)=>`<h4>Gaps that occur together ${LOCKTAG}</h4>
+  <div class="figure"><div class="cap">Criteria missing in the same case</div>
+    <div class="capsub">Criteria that fail together usually share one broken step in the workflow.</div>
+    ${svgMatrix(STATE.rows,S.tpl)}</div>`,
+ subgroup:(S,x)=>!x.groups.length?'':`<h4>Documented compliance by ${esc(REPORT.subgroupBy.toLowerCase())} ${LOCKTAG}</h4>
+  <div class="figure"><div class="cap">Where the record falls short</div>
+    <div class="capsub">${x.groups.length>1
+      ? `${esc(x.groups[0].key)} ${x.groups[0].pct}% against ${esc(x.groups[x.groups.length-1].key)} ${x.groups[x.groups.length-1].pct}% — target the change rather than the whole trust.`
+      : 'Compliance is even across the groups collected.'}</div>
+    ${svgSubgroup(x.groups,S.M,S.pct,REPORT.subgroupBy)}</div>`,
+ stats:(S,x)=>`<h4>Descriptive statistics ${LOCKTAG}</h4>
+  <div style="overflow-x:auto"><table class="stats">
+    <thead><tr><th>Criterion</th>${ORDER.map(s=>`<th class="num">${LABEL[s]}</th>`).join('')}<th class="num">% Met</th></tr></thead>
+    <tbody>${S.ranked.map(r=>`<tr><td>${esc(r.c.name)}</td>`+
+      ORDER.map(s=>`<td class="num">${r.counts[s]}</td>`).join('')+`<td class="num">${r.pct}%</td></tr>`).join('')}</tbody>
+    <tfoot><tr><td>All criteria</td>${ORDER.map(s=>
+      `<td class="num">${S.per.reduce((a,r)=>a+r.counts[s],0)}</td>`).join('')}<td class="num">${S.pct}%</td></tr></tfoot>
+  </table></div>
+  <p class="capsub" style="margin-top:8px">Median ${S.median} of ${S.M} criteria per case · mean ${S.mean.toFixed(1)} · range ${S.min}–${S.max} · ${S.confirmed} of ${S.N} rows clinician-confirmed${S.needsReview?` · ${S.needsReview} Not met because the record contradicts itself`:''}.</p>`,
+ priority:(S,x)=>!S.priority.length?'':`<h4>Priority — fix these first ${LOCKTAG}</h4>
+  <div class="priority">
+    <p class="pbig">${S.priority.length} of the ${S.M} criteria account for <b>${S.priorityShare}%</b> of all missing documentation
+      (${S.priorityCum} of ${S.totalMissing} checks).</p>
+    <ol>${S.priority.map(r=>`<li><b>${esc(r.c.name)}</b> — missing in ${r.missing} of ${S.N} (documented ${r.pct}%)</li>`).join('')}</ol>
+    <p class="capsub">The fewest changes that recover the most of the shortfall.</p>
+  </div>`,
+ plan:(S,x)=>`<h4>Action plan <span class="tagx edit">yours to complete</span></h4>${planTable(S)}`,
+ narrative:(S,x)=>`<h4>Written report <span class="tagx edit">editable</span></h4>
+  ${SECTIONS.map(([k,l])=>narrativeBlock(k,l)).join('')}`
+};
+
 function renderDoc(S){
-  const inc=REPORT.include, tpl=S.tpl, N=S.N, M=S.M;
   const rev=SECTIONS.filter(([k])=>REPORT.reviewed[k]).length;
-  const groups=inc.subgroup?groupBy(STATE.rows,REPORT.subgroupBy,M):[];
-  const worstG=groups[0], bestG=groups[groups.length-1];
-  const lock='<span class="lock" title="Calculated from the confirmed table — cannot be typed over">computed</span>';
+  const ctx={groups:REPORT.include.subgroup?groupBy(STATE.rows,REPORT.subgroupBy,S.M):[]};
+  const body=REPORT.order.filter(k=>REPORT.include[k]).map(k=>DOCBLOCK[k](S,ctx)).join('\n');
 
   $('report-doc').innerHTML=
 `<div class="doc" id="doc">
-  <div class="draft ${rev===SECTIONS.length?'ready':''}">
-    <b>${rev===SECTIONS.length?'Draft checked':'DRAFT — not yet checked'}</b>
-    ${rev===SECTIONS.length
-      ? 'Every written section has been read and checked. Figures and statistics remain as calculated.'
-      : `Read each written section, correct anything wrong, mark it checked — ${rev} of ${SECTIONS.length} done. Figures and statistics are calculated from ${S.confirmed} confirmed rows and cannot be edited.`}
+  <div class="draft">
+    <b>Draft for clinician review</b>
+    Edit any written section and tick it off as you go — ${rev} of ${SECTIONS.length} checked so far.
+    Figures and statistics are calculated from the ${S.confirmed} confirmed rows and cannot be edited.
   </div>
-
   <div class="doc-head">
-    <h3>${esc(tpl.name)}</h3>
-    <p>${esc(tpl.standard)} · ${N} cases · ${M} criteria · ${S.totalChecks} documentation checks · fictional data</p>
+    <h3>${esc(S.tpl.name)}</h3>
+    <p>${esc(S.tpl.standard)} · ${S.N} cases · ${S.M} criteria · ${S.totalChecks} documentation checks · fictional data</p>
   </div>
-
-  ${inc.tiles?`<h4>Summary ${lock}</h4>
-  <div class="tiles">
-    <div class="tile"><div class="v">${S.pct}%</div><div class="k">Documented compliance</div><div class="sub">${S.totalMet} of ${S.totalChecks} checks · target 100%</div></div>
-    <div class="tile"><div class="v">${S.notDoc}</div><div class="k">Not documented</div><div class="sub">${Math.round(100*S.notDoc/S.totalChecks)}% of all checks</div></div>
-    <div class="tile"><div class="v">${S.full}<span style="font-size:1.1rem;color:#898781">/${N}</span></div><div class="k">Fully compliant cases</div><div class="sub">all ${M} criteria documented</div></div>
-    <div class="tile"><div class="v">${S.needsReview}</div><div class="k">Escalated to a clinician</div><div class="sub">record contradictory or unclear</div></div>
-  </div>`:''}
-
-  ${inc.fig1?`<h4>Figure 1 — Documentation status by criterion ${lock}</h4>
-  <div class="figure"><div class="cap">Every criterion, every case — ranked worst first</div>
-    ${legend()}${svgStacked(S.ranked,N)}</div>`:''}
-
-  ${inc.fig2?`<h4>Figure 2 — Distribution of documentation completeness ${lock}</h4>
-  <div class="figure"><div class="cap">Criteria documented per case</div>
-    ${svgHistogram(S.dist,M,N)}</div>`:''}
-
-  ${inc.matrix?`<h4>Figure — Gaps that occur together ${lock}</h4>
-  <div class="figure"><div class="cap">Criteria missing in the same case</div>
-    <div class="capsub">Criteria that fail together usually share one broken step in the workflow.</div>
-    ${svgMatrix(STATE.rows,tpl)}</div>`:''}
-
-  ${inc.subgroup&&groups.length?`<h4>Figure — Documented compliance by ${esc(REPORT.subgroupBy.toLowerCase())} ${lock}</h4>
-  <div class="figure"><div class="cap">Where the record falls short</div>
-    <div class="capsub">${worstG&&bestG&&worstG.key!==bestG.key
-      ? `${esc(worstG.key)} ${worstG.pct}% against ${esc(bestG.key)} ${bestG.pct}% — target the change rather than the whole trust.`
-      : 'Compliance is even across the groups collected.'}</div>
-    ${svgSubgroup(groups,M,S.pct,REPORT.subgroupBy)}</div>`:''}
-
-  ${inc.stats?`<h4>Descriptive statistics ${lock}</h4>
-  <div style="overflow-x:auto"><table class="stats">
-    <thead><tr><th>Criterion</th>${ORDER.map(s=>`<th class="num">${LABEL[s]}</th>`).join('')}<th class="num">% Met</th></tr></thead>
-    <tbody>${S.ranked.map(x=>`<tr><td>${esc(x.c.name)}</td>`+
-      ORDER.map(s=>`<td class="num">${x.counts[s]}</td>`).join('')+`<td class="num">${x.pct}%</td></tr>`).join('')}</tbody>
-    <tfoot><tr><td>All criteria</td>${ORDER.map(s=>
-      `<td class="num">${S.per.reduce((a,x)=>a+x.counts[s],0)}</td>`).join('')}<td class="num">${S.pct}%</td></tr></tfoot>
-  </table></div>
-  <p class="capsub" style="margin-top:8px">Median ${S.median} of ${M} criteria per case · mean ${S.mean.toFixed(1)} · range ${S.min}–${S.max} · ${S.confirmed} of ${N} rows clinician-confirmed.</p>`:''}
-
-  ${inc.priority&&S.priority.length?`<h4>Priority — fix these first ${lock}</h4>
-  <div class="priority">
-    <p class="pbig">${S.priority.length} of the ${M} criteria account for <b>${S.priorityShare}%</b> of all missing documentation
-      (${S.priorityCum} of ${S.totalMissing} checks).</p>
-    <ol>${S.priority.map(x=>`<li><b>${esc(x.c.name)}</b> — missing in ${x.missing} of ${N} cases (documented ${x.pct}%)</li>`).join('')}</ol>
-    <p class="capsub">The fewest changes that recover the most of the shortfall.</p>
-  </div>`:''}
-
-  ${inc.plan?`<h4>Action plan <span class="tagx edit">yours to complete</span></h4>
-  ${planTable(S)}`:''}
-
-  ${inc.narrative?`<h4>Written report <span class="tagx edit">editable</span></h4>
-  ${SECTIONS.map(([k,l])=>narrativeBlock(k,l)).join('')}`:''}
-
+  ${body}
   <p class="ip">AuditPilot is a documentation audit and service-evaluation tool. It reports whether information is present in a
   record and summarises that across a sample. It does not diagnose, does not assess or recommend treatment, produces nothing
   specific to an individual patient, and is not a medical device. All content is a draft for review by a responsible clinician.</p>
@@ -1522,8 +1595,32 @@ function renderDoc(S){
 }
 
 /* ---------------- report events ---------------- */
-$('report-btn').addEventListener('click',buildReport);
 $('print-btn').addEventListener('click',()=>window.print());
+
+/* drag the builder list to reorder the document */
+let DRAG=null;
+document.addEventListener('dragstart',e=>{
+  const li=e.target.closest('#blocks li'); if(!li) return;
+  DRAG=li.dataset.key; li.classList.add('dragging'); e.dataTransfer.effectAllowed='move';
+});
+document.addEventListener('dragend',e=>{
+  document.querySelectorAll('#blocks li').forEach(l=>l.classList.remove('dragging','over'));
+  DRAG=null;
+});
+document.addEventListener('dragover',e=>{
+  const li=e.target.closest('#blocks li'); if(!li||!DRAG) return;
+  e.preventDefault();
+  document.querySelectorAll('#blocks li').forEach(l=>l.classList.toggle('over', l===li && l.dataset.key!==DRAG));
+});
+document.addEventListener('drop',e=>{
+  const li=e.target.closest('#blocks li'); if(!li||!DRAG) return;
+  e.preventDefault();
+  const to=li.dataset.key; if(to===DRAG) return;
+  const o=REPORT.order.filter(k=>k!==DRAG);
+  o.splice(o.indexOf(to),0,DRAG);
+  REPORT.order=o;
+  renderBuilder(REPORT.stats); renderDoc(REPORT.stats);
+});
 
 document.addEventListener('change',e=>{
   const t=e.target;
@@ -1618,6 +1715,8 @@ document.addEventListener('change',e=>{
 
 $('evidence').innerHTML=EV_EMPTY;
 $('results').innerHTML='<p class="src" style="padding:26px 20px">Load a sample case and press <b>Check documentation</b>.</p>';
+$('begin').addEventListener('click',()=>showView('setup'));
+document.querySelector('.brand').addEventListener('click',()=>showView('welcome'));
 renderCriteriaList();
 </script>
 </body>

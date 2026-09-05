@@ -20,24 +20,25 @@ One file. Any static host works for a public link — GitHub Pages, Netlify drop
 
 ## Navigating it
 
-Four tabs across the top, not one long scroll. The header carries the running state
+Five tabs across the top, not one long scroll. The header carries the running state
 (`30 cases · 64% documented · 30/30 confirmed`) on every tab.
 
 | Tab | |
 |---|---|
-| **Set up** | Standard, criteria, engine, case notes. Criteria, the readiness checklist and the sample cases are collapsed by default. |
+| **Start** | Welcome page: the readiness checklist in full, how the four steps work, and what the tool will not do. |
+| **Set up** | Standard, criteria, engine, case notes. Criteria and the sample cases are collapsed by default. |
 | **Table** | The audit table, scrolling inside its own pane, with the evidence panel docked to the right — click a cell, the source sentence appears beside it rather than below the fold. |
 | **Findings** | A 2×2 dashboard: summary + priority, compliance by criterion, ranked gaps with suggested actions, and a fourth panel that switches between **Spread**, **Together** and **Subgroup**. |
 | **Report** | The builder and the draft document. |
 
 ## The 3-minute demo
 
-1. **Set up** → **Sample cases** → **30-case sample** → **Check documentation**. Lands you on
-   the table: 30 patients, 7 criteria, 210 checks, about a second.
+1. **Start** → **Begin an audit** → **Sample cases** → **30-case sample** → **Check
+   documentation**. Lands you on the table: 30 patients, 7 criteria, 210 checks, about a second.
 2. Click an amber cell — *"No relevant documentation found."* The commonest real audit finding:
    the care probably happened, the notes can't prove it.
-3. Click the purple **Review** cell on Case 4 — clerking says NKDA, drug chart says penicillin
-   allergy. The tool refuses to pick a side.
+3. Click the pink **Not met** cell on Case 4 — clerking says NKDA, drug chart says penicillin
+   allergy. The tool refuses to pick a side and hands it to a human.
 4. **Confirm all** → **Findings**. The priority box: 3 of 7 criteria account for 67% of all gaps.
 5. Switch the fourth panel to **Subgroup**: Emergency Department 34% against specialty wards 90%.
    Switch the dimension to `Admission`: out of hours 37% against in hours 82%. *That* is the
@@ -56,7 +57,8 @@ read and marked *Checked*, and a progress bar in the builder tracks how far thro
 
 | | |
 |---|---|
-| **Editable** | Introduction, Aim, Standard, Methods, Results, Discussion, Conclusion — click and type. An edited section is tagged, with a *Restore generated text* link to undo. The action plan is yours to complete. |
+| **Editable** | Introduction, Aim, Standard, Methods, Results, Discussion, Conclusion — click and type. An edited section is tagged, with a *Restore generated text* link to undo. The action plan is yours to complete. Ticking sections off is optional, not a gate. |
+| **Reorderable** | Every block in the builder — written report, figures, tables, action plan — drags up and down, and the document follows. Written report sits first by default. |
 | **Locked** (`computed`) | Every figure, the summary tiles and the statistics table. They are calculated from the confirmed rows and cannot be typed over. An audit whose numbers can be hand-edited is not an audit. |
 
 **Driving action.** Findings are useless without a change that has a name and a date on it, so
@@ -83,9 +85,10 @@ the report ends in two sections built for that:
   door" — a targeted action rather than a trust-wide memo.
 
 Charts are hand-built inline SVG with hover tooltips: no chart library, no CDN, still one file.
-The four status colours were validated for colour-vision deficiency (worst adjacent pair
-ΔE 16.2 protan, 30.3 normal vision); every segment carries a direct label and the statistics
-table repeats the data, so nothing depends on colour alone.
+Colours follow the NHS identity palette. The three status colours were validated for
+colour-vision deficiency (worst adjacent pair ΔE 12.7 protan, 29.5 normal vision); every
+segment carries a direct label and the statistics table repeats the data, so nothing depends
+on colour alone.
 
 **Print / save as PDF** drops the tool chrome, the builder and the edit controls, and prints the
 document alone.
@@ -117,9 +120,11 @@ classification — get it confirmed rather than inferred.
   7 criteria) and VTE risk assessment (NICE NG89, 6 criteria) — plus **custom criteria**:
   paste your own, one per line. Hundreds of audit standards exist, so a library is pointless;
   the engine is the same.
-- **Four statuses**, not two: Met / Not met / **Not documented** / **Needs review**.
-  "Not documented" is the honest answer when the record is silent. "Needs review" is what the
-  tool returns instead of guessing when the record contradicts itself.
+- **Three statuses**: Met / **Not documented** / **Not met**. "Not documented" is the honest
+  answer when the record is silent — the commonest real audit finding. A cell is **Not met**
+  either because the notes document a failure or because the notes contradict themselves; the
+  second carries a `conflict` flag, is counted separately as *to resolve*, and the evidence
+  panel says plainly that a clinician must resolve it. The tool never picks a side.
 - **Evidence on every cell.** Click any chip for the verbatim source sentence. If it can't
   quote the notes, the answer is Not documented.
 - **Per-row clinician sign-off**, surfaced in the scope bar and in the report's Methods section.
