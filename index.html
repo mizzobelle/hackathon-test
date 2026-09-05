@@ -6,157 +6,148 @@
 <title>AuditPilot — clinical audit documentation checker</title>
 <style>
   :root{
-    --ink:#12303a; --muted:#63797f; --line:#dbe7e8; --paper:#fff; --wash:#f1f6f6;
+    --ink:#12303a; --muted:#63797f; --line:#e0eaeb; --paper:#fff; --wash:#f4f8f8;
     --teal:#087f79; --teal-dark:#05635f; --soft:#e3f2f0;
-    --met:#0f7a4a; --met-bg:#e2f4ea;
-    --notmet:#a92c2c; --notmet-bg:#fbe6e5;
-    --nodoc:#9a6206; --nodoc-bg:#fdefd8;
-    --review:#5b3ea8; --review-bg:#eee8fb;
-    --shadow:0 18px 50px rgba(30,69,72,.08);
+    --met:#0f7a4a; --met-bg:#e8f5ee; --notmet:#a92c2c; --notmet-bg:#fbecea;
+    --nodoc:#9a6206; --nodoc-bg:#fdf2de; --review:#5b3ea8; --review-bg:#f0ebfb;
   }
   *{box-sizing:border-box}
-  body{margin:0;color:var(--ink);background:var(--wash);
+  body{margin:0;color:var(--ink);background:var(--wash);font-size:15px;
     font-family:"Avenir Next",Avenir,"Segoe UI",system-ui,sans-serif;line-height:1.5}
-  .shell{width:min(1240px,calc(100% - 40px));margin:0 auto;padding:38px 0 90px}
   a{color:var(--teal-dark)}
+  h2{margin:0 0 10px;font-size:.72rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:#4a656b}
+  h2.mt,.mt{margin-top:22px}
+  .src{margin:6px 0 0;color:var(--muted);font-size:.78rem}
+  code{padding:1px 5px;border-radius:4px;background:#eef3f3;font-size:.85em}
 
-  header.top{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;margin-bottom:24px}
-  .eyebrow{display:inline-flex;align-items:center;gap:8px;margin:0 0 10px;color:var(--teal);
-    font-size:.72rem;font-weight:800;letter-spacing:.13em;text-transform:uppercase}
-  .eyebrow::before{content:"";width:22px;height:2px;background:var(--teal)}
-  h1{margin:0;font-family:Georgia,"Times New Roman",serif;font-size:clamp(2rem,4vw,3.1rem);
-    font-weight:400;letter-spacing:-.03em;line-height:1}
-  header.top p.sub{margin:12px 0 0;max-width:640px;color:var(--muted);font-size:1rem}
-  .demo-badge{padding:8px 13px;border:1px solid #cfe0df;border-radius:999px;background:#fff;
-    color:var(--teal-dark);font-size:.74rem;font-weight:800;letter-spacing:.04em;white-space:nowrap}
+  /* ---- top bar ---- */
+  .bar{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.94);
+    backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  .bar-in{display:flex;align-items:center;gap:26px;width:min(1320px,calc(100% - 40px));margin:0 auto;height:54px}
+  .brand{display:flex;align-items:center;gap:9px;font-family:Georgia,serif;font-size:1.22rem;letter-spacing:-.02em}
+  .mark{width:9px;height:9px;border-radius:2px;background:var(--teal)}
+  .tabs{display:flex;gap:2px;margin-right:auto}
+  .tab{padding:7px 14px;border:0;border-radius:7px;background:none;color:#5c7176;
+    font:inherit;font-size:.83rem;font-weight:700;cursor:pointer}
+  .tab:hover:not(:disabled){background:#eef3f3;color:var(--ink)}
+  .tab.on{background:var(--soft);color:var(--teal-dark)}
+  .tab:disabled{opacity:.38;cursor:not-allowed}
+  .bar-end{display:flex;align-items:center;gap:12px}
+  .hstat{color:var(--muted);font-size:.78rem;font-variant-numeric:tabular-nums}
+  .pill{padding:4px 10px;border:1px solid #d6e6e4;border-radius:99px;color:var(--teal-dark);
+    font-size:.66rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase}
 
-  .panel{border:1px solid rgba(190,211,211,.85);border-radius:15px;background:var(--paper);box-shadow:var(--shadow)}
-  h2{margin:0;font-size:1.03rem;font-weight:750;letter-spacing:-.01em}
-  h3{margin:0 0 6px;font-size:.86rem;font-weight:800}
-  .hint{color:var(--muted);font-size:.8rem;margin:4px 0 0}
+  .shell{width:min(1320px,calc(100% - 40px));margin:0 auto;padding:22px 0 40px}
+  .view{display:none}
+  .view.on{display:block}
 
-  details.prep{margin-bottom:20px;padding:18px 22px}
-  details.prep summary{cursor:pointer;font-weight:750;font-size:.97rem;list-style:none;display:flex;
-    justify-content:space-between;align-items:center;gap:12px}
-  details.prep summary::-webkit-details-marker{display:none}
-  details.prep summary::after{content:"▾";color:var(--teal);font-size:.9rem}
-  details.prep[open] summary::after{content:"▴"}
-  .prep-list{margin:16px 0 0;padding:0;list-style:none;display:grid;gap:9px}
-  .prep-list li{display:flex;gap:10px;align-items:flex-start;font-size:.88rem}
-  .prep-list input{margin-top:3px;accent-color:var(--teal);width:15px;height:15px;flex:none}
+  /* ---- cards & layout ---- */
+  .card{padding:20px 22px;border:1px solid var(--line);border-radius:12px;background:var(--paper)}
+  .card.pad0{padding:0;overflow:hidden}
+  .card-head{display:flex;align-items:center;justify-content:space-between;gap:14px;
+    padding:14px 20px;border-bottom:1px solid var(--line);background:#fafcfc}
+  .card-head.flat{border:0;background:none;padding:0 0 14px}
+  .card-head h2{margin:0}
+  .hgroup{display:flex;gap:7px}
+  .grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:18px;align-items:start}
+  .grid-table{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:18px;align-items:start}
+  .quad{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;align-items:start}
+  @media (max-width:1080px){.grid2,.grid-table,.quad{grid-template-columns:1fr}}
 
-  .workspace{display:grid;grid-template-columns:minmax(0,400px) minmax(0,1fr);gap:20px;align-items:start}
-  .left{padding:22px}
-  .field{margin-bottom:16px}
-  label.lbl{display:block;margin-bottom:6px;color:#3a565c;font-size:.76rem;font-weight:800;letter-spacing:.03em;text-transform:uppercase}
-  select,textarea,input[type=password]{width:100%;border:1px solid var(--line);border-radius:8px;padding:10px 12px;
-    color:var(--ink);background:#fbfdfd;font:inherit;font-size:.88rem;outline:none}
+  /* ---- form ---- */
+  label.lbl{display:block;margin:14px 0 6px;color:#3a565c;font-size:.72rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
+  select,textarea,input[type=password],input[type=text],input[type=date]{width:100%;border:1px solid var(--line);
+    border-radius:8px;padding:9px 11px;color:var(--ink);background:#fbfdfd;font:inherit;font-size:.86rem;outline:none}
   select:focus,textarea:focus,input:focus{border-color:var(--teal);background:#fff;box-shadow:0 0 0 3px rgba(8,127,121,.12)}
-  textarea{resize:vertical;min-height:150px;font-size:.85rem;line-height:1.55}
-  textarea#notes{min-height:230px}
-
-  .crit-list{margin:10px 0 0;padding:0;list-style:none;border-top:1px solid var(--line)}
-  .crit-list li{display:flex;gap:9px;padding:8px 0;border-bottom:1px solid var(--line);font-size:.8rem;color:#3f585e}
-  .crit-list .n{flex:none;width:19px;height:19px;border-radius:5px;background:var(--soft);color:var(--teal-dark);
-    display:grid;place-items:center;font-size:.68rem;font-weight:800}
-  .src{margin:9px 0 0;color:var(--muted);font-size:.73rem}
-
-  .btnrow{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}
-  button{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:8px;
-    padding:11px 16px;color:#fff;background:var(--teal);font:inherit;font-size:.85rem;font-weight:750;cursor:pointer;
-    transition:background .16s,transform .16s,box-shadow .16s}
-  button:hover{background:var(--teal-dark);box-shadow:0 6px 14px rgba(8,127,121,.2);transform:translateY(-1px)}
-  button:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+  textarea{resize:vertical;line-height:1.55;font-size:.83rem}
+  #notes{min-height:270px}
+  .apirow{display:none;margin-top:8px}
+  .apirow.on{display:block}
+  .btnrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+  button{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:0;border-radius:8px;
+    padding:10px 16px;color:#fff;background:var(--teal);font:inherit;font-size:.84rem;font-weight:700;cursor:pointer;
+    transition:background .15s,box-shadow .15s}
+  button:hover:not(:disabled){background:var(--teal-dark)}
+  button:disabled{opacity:.45;cursor:not-allowed}
   button.ghost{color:var(--teal-dark);background:var(--soft)}
-  button.ghost:hover{color:#fff;background:var(--teal)}
+  button.ghost:hover:not(:disabled){color:#fff;background:var(--teal)}
   button.quiet{color:#5c7176;background:#eef3f3}
-  button.quiet:hover{color:#fff;background:#7d9498}
-  button.tiny{padding:6px 10px;font-size:.74rem}
+  button.quiet:hover:not(:disabled){color:#fff;background:#8ba1a5}
+  button.tiny{padding:6px 11px;font-size:.76rem}
 
-  .samples{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}
+  /* ---- disclosure ---- */
+  details.mini{margin-top:14px;border:1px solid var(--line);border-radius:9px;background:#fcfdfd}
+  details.mini>summary{padding:9px 13px;font-size:.79rem;font-weight:700;cursor:pointer;list-style:none;
+    display:flex;justify-content:space-between;align-items:center;color:#3f585e}
+  details.mini>summary::-webkit-details-marker{display:none}
+  details.mini>summary::after{content:"+";color:var(--teal);font-weight:800}
+  details.mini[open]>summary{border-bottom:1px solid var(--line)}
+  details.mini[open]>summary::after{content:"–"}
+  .crit-list,.prep-list,.samples,.safe{margin:0;padding:8px 13px 11px;list-style:none}
+  .crit-list li{padding:5px 0;font-size:.79rem;color:#3f585e;border-bottom:1px solid #eef3f3}
+  .crit-list li:last-child{border:0}
+  .crit-list b{color:var(--ink)}
+  .prep-list li{display:flex;gap:8px;align-items:flex-start;padding:4px 0;font-size:.79rem}
+  .prep-list input{margin-top:3px;accent-color:var(--teal);width:14px;height:14px;flex:none}
+  .samples li{display:flex;flex-direction:column;padding:8px 10px;margin-bottom:4px;border-radius:7px;cursor:pointer}
+  .samples li:hover{background:var(--soft)}
+  .samples b{font-size:.82rem}
+  .samples span{color:var(--muted);font-size:.74rem}
+  .safe li{padding:3px 0;font-size:.79rem;color:#3f585e}
+  details.mini>p{margin:0;padding:0 13px 12px;color:var(--muted);font-size:.75rem}
 
-  .right{min-height:520px;overflow:hidden}
-  .right-head{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;
-    padding:18px 22px;border-bottom:1px solid var(--line);background:#f8fbfb}
-  .scopebar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:14px 22px;border-bottom:1px solid var(--line);
-    background:#fff;font-size:.78rem}
-  .stat{padding:5px 11px;border-radius:999px;background:#f1f6f6;font-weight:750;color:#3f585e}
-  .stat.g{background:var(--met-bg);color:var(--met)}
-  .stat.a{background:var(--nodoc-bg);color:var(--nodoc)}
-  .stat.r{background:var(--notmet-bg);color:var(--notmet)}
-  .stat.p{background:var(--review-bg);color:var(--review)}
+  /* ---- scope bar ---- */
+  .scopebar{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px}
+  .stat{padding:5px 11px;border-radius:99px;background:#fff;border:1px solid var(--line);
+    font-size:.77rem;font-weight:700;color:#3f585e}
+  .stat.g{background:var(--met-bg);color:var(--met);border-color:#cbe8d8}
+  .stat.a{background:var(--nodoc-bg);color:var(--nodoc);border-color:#f2ddb4}
+  .stat.r{background:var(--notmet-bg);color:var(--notmet);border-color:#f2cecc}
+  .stat.p{background:var(--review-bg);color:var(--review);border-color:#dbd0f3}
 
-  .empty{display:grid;min-height:430px;place-items:center;padding:40px;color:var(--muted);text-align:center}
-  .empty p{max-width:330px;margin:14px auto 0;font-size:.87rem}
-  .empty .ico{width:46px;height:46px;margin:0 auto;border:1px solid #c9e1df;border-radius:50%;color:var(--teal);
-    background:var(--soft);display:grid;place-items:center;font-size:1.2rem}
-
-  .tablewrap{padding:0 22px 6px;overflow-x:auto}
-  table{border-collapse:collapse;width:100%;font-size:.8rem;margin-top:16px}
-  th,td{border-bottom:1px solid var(--line);padding:8px 5px;text-align:left;vertical-align:middle}
-  thead th{position:sticky;top:0;background:#fff;color:#4a656b;font-size:.68rem;font-weight:800;letter-spacing:.05em;
-    text-transform:uppercase;border-bottom:2px solid var(--line);white-space:normal;min-width:62px}
-  thead th.case-col{min-width:118px}
+  /* ---- table ---- */
+  #results{max-height:70vh;overflow:auto}
+  table{border-collapse:collapse;width:100%;font-size:.79rem}
+  th,td{border-bottom:1px solid var(--line);padding:7px 5px;text-align:left}
+  thead th{position:sticky;top:0;z-index:2;background:#fff;color:#4a656b;font-size:.65rem;font-weight:800;
+    letter-spacing:.05em;text-transform:uppercase;border-bottom:2px solid var(--line);min-width:60px}
+  thead th:first-child{padding-left:18px;min-width:104px}
+  tbody td:first-child{padding-left:18px}
   tbody tr:hover{background:#fafcfc}
-  tfoot td{font-size:.71rem;font-weight:800;color:#4a656b;border-top:2px solid var(--line);border-bottom:0;padding-top:10px}
-  .case-name{font-weight:750}
-  .case-name span{display:block;color:var(--muted);font-weight:400;font-size:.72rem}
-
-  .chip{display:inline-block;width:100%;padding:5px 4px;border-radius:6px;border:1px solid transparent;
-    font-size:.67rem;white-space:nowrap;font-weight:800;text-align:center;cursor:pointer;letter-spacing:.01em}
-  .chip.met{background:var(--met-bg);color:var(--met);border-color:#b9e2cc}
-  .chip.notmet{background:var(--notmet-bg);color:var(--notmet);border-color:#f2c3c1}
-  .chip.nodoc{background:var(--nodoc-bg);color:var(--nodoc);border-color:#f0d5a4}
-  .chip.review{background:var(--review-bg);color:var(--review);border-color:#d3c6f0}
-  .chip:focus-visible{outline:2px solid var(--teal);outline-offset:1px}
+  tfoot td{font-size:.69rem;font-weight:800;color:#4a656b;border-top:2px solid var(--line);border-bottom:0}
+  .case-name{font-weight:700}
+  .case-name span{display:block;color:var(--muted);font-weight:400;font-size:.71rem}
+  .chip{display:block;width:100%;padding:5px 3px;border-radius:6px;border:1px solid transparent;
+    font-size:.66rem;font-weight:800;text-align:center;white-space:nowrap;cursor:pointer}
+  .chip.met{background:var(--met-bg);color:var(--met);border-color:#c3e4d3}
+  .chip.notmet{background:var(--notmet-bg);color:var(--notmet);border-color:#f0c8c6}
+  .chip.nodoc{background:var(--nodoc-bg);color:var(--nodoc);border-color:#efd8a9}
+  .chip.review{background:var(--review-bg);color:var(--review);border-color:#d7cbf1}
   .chip.sel{box-shadow:0 0 0 2px var(--ink)}
 
-  .evidence{padding:0 22px}
-  .evbox{margin:12px 0 4px;padding:15px 17px;border:1px solid var(--line);border-left:4px solid var(--teal);
-    border-radius:10px;background:#f9fcfc}
-  .evbox .who{color:var(--muted);font-size:.73rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
-  .evbox .crit{margin:5px 0 9px;font-weight:750;font-size:.9rem}
-  .evbox blockquote{margin:0;padding:10px 13px;border-radius:7px;background:#fff;border:1px dashed #cfe0e0;
-    font-family:Georgia,serif;font-size:.9rem}
-  .evbox .why{margin:9px 0 0;color:var(--muted);font-size:.79rem}
+  /* ---- evidence ---- */
+  .evidence-panel{position:sticky;top:70px;font-size:.83rem}
+  .ev-empty{color:var(--muted);font-size:.8rem}
+  .evbox .who{color:var(--muted);font-size:.68rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+  .evbox .crit{margin:5px 0 9px;font-weight:700;font-size:.87rem}
+  .evbox blockquote{margin:0;padding:10px 12px;border-radius:7px;background:#fbfdfd;border:1px dashed #cfe0e0;
+    font-family:Georgia,serif;font-size:.86rem}
+  .evbox .why{margin:9px 0 0;color:var(--muted);font-size:.78rem}
 
-  .gaps{margin:18px 22px 22px;padding:17px 19px;border:1px solid var(--line);border-radius:12px;background:#fcfdfd}
-  .gaps ul{margin:10px 0 0;padding-left:18px;font-size:.85rem}
-  .gaps li{margin-bottom:7px}
-  .gaps li b{color:var(--nodoc)}
-  .nogaps{color:var(--met);font-size:.85rem;margin:6px 0 0}
-
-  .report{margin-top:20px;padding:22px}
-
-  .safety{margin-top:20px;padding:18px 22px;border:1px solid #dbe7e8;border-radius:12px;background:#fff}
-  .safety ul{margin:10px 0 0;padding-left:18px;font-size:.84rem;color:#3f585e}
-  .safety li{margin-bottom:6px}
-  footer.foot{margin-top:26px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:.76rem}
-  .warn{margin:12px 0 0;padding:10px 13px;border-radius:8px;background:var(--nodoc-bg);color:#7a4e05;font-size:.78rem}
-  .apirow{margin-top:10px;display:none}
-  .apirow.on{display:block}
-
-  /* ---------- report document + charts ---------- */
-  .doc{margin-top:18px;padding:30px 34px;border:1px solid var(--line);border-radius:12px;background:#fbfdfd}
-  .doc-head{padding-bottom:16px;border-bottom:2px solid var(--ink);margin-bottom:22px}
-  .doc-head h3{margin:0;font-family:Georgia,serif;font-size:1.6rem;font-weight:400;letter-spacing:-.02em}
-  .doc-head p{margin:6px 0 0;color:var(--muted);font-size:.82rem}
-  .doc h4{margin:26px 0 10px;font-size:.73rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#4a656b}
-  .doc h4:first-of-type{margin-top:0}
-  .doc p.body{margin:0 0 12px;font-family:Georgia,serif;font-size:.94rem;line-height:1.62}
-
-  .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:6px}
-  .tile{padding:15px 17px;border:1px solid var(--line);border-radius:10px;background:#fff}
-  .tile .v{font-size:2rem;font-weight:750;letter-spacing:-.03em;line-height:1.05}
-  .tile .k{margin-top:5px;color:var(--muted);font-size:.75rem;font-weight:750;letter-spacing:.02em}
-  .tile .sub{margin-top:2px;color:#9aa8ab;font-size:.71rem}
-
-  .figure{margin:0 0 4px;padding:18px 20px 14px;border:1px solid var(--line);border-radius:10px;background:#fcfcfb}
-  .figure .cap{font-size:.85rem;font-weight:750}
-  .figure .capsub{margin:3px 0 14px;color:var(--muted);font-size:.76rem}
+  /* ---- findings quadrants ---- */
+  .quad .card{min-height:0}
+  .tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .doc .tiles{grid-template-columns:repeat(4,minmax(0,1fr))}
+  @media (max-width:900px){.doc .tiles{grid-template-columns:1fr 1fr}}
+  .tile{padding:13px 15px;border:1px solid var(--line);border-radius:9px;background:#fcfdfd}
+  .tile .v{font-size:1.7rem;font-weight:750;letter-spacing:-.03em;line-height:1.05}
+  .tile .k{margin-top:3px;color:#4a656b;font-size:.73rem;font-weight:700}
+  .tile .sub{color:#9aa8ab;font-size:.7rem}
   .figure svg{display:block;width:100%;height:auto;overflow:visible}
-  .legend{display:flex;gap:16px;flex-wrap:wrap;margin:0 0 14px;font-size:.76rem;color:#52514e}
-  .legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+  .cap{font-size:.8rem;font-weight:700}
+  .capsub{margin:2px 0 10px;color:var(--muted);font-size:.75rem}
+  .legend{display:flex;gap:12px;flex-wrap:wrap;margin:0 0 10px;font-size:.72rem;color:#52514e}
+  .legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
   .ax{fill:#898781;font-size:11px}
   .axlab{fill:#52514e;font-size:11.5px}
   .val{fill:#0b0b0b;font-size:11.5px;font-weight:700;font-variant-numeric:tabular-nums}
@@ -164,238 +155,240 @@
   .base{stroke:#c3c2b7;stroke-width:1}
   .seg{cursor:pointer}
   .seg:hover{opacity:.82}
-
-  #tip{position:fixed;z-index:50;display:none;max-width:250px;padding:9px 11px;border-radius:8px;
-    background:#12303a;color:#fff;font-size:.76rem;line-height:1.45;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,.22)}
+  .seg-ctl{display:flex;gap:3px;padding:3px;border-radius:8px;background:#eef3f3}
+  .seg-ctl button{padding:5px 10px;border-radius:6px;background:none;color:#5c7176;font-size:.74rem;font-weight:700}
+  .seg-ctl button.on{background:#fff;color:var(--teal-dark)}
+  .seg-ctl button:hover:not(.on){background:#e3ebeb;color:var(--ink)}
+  #tip{position:fixed;z-index:60;display:none;max-width:250px;padding:8px 10px;border-radius:7px;
+    background:#12303a;color:#fff;font-size:.75rem;line-height:1.45;pointer-events:none}
   #tip b{display:block;margin-bottom:2px}
 
-  table.stats{margin-top:4px;font-size:.79rem}
-  table.stats td.num,table.stats th.num{text-align:right;font-variant-numeric:tabular-nums}
-  table.stats tbody tr td:first-child{font-weight:700}
-  .narrative{white-space:pre-wrap;font-family:Georgia,serif;font-size:.92rem;line-height:1.62}
+  .gaplist{margin:0;padding:0;list-style:none;font-size:.81rem}
+  .gaplist li{padding:9px 0;border-bottom:1px solid var(--line)}
+  .gaplist li:last-child{border:0}
+  .gaplist b{display:block}
+  .gaplist .miss{color:var(--nodoc);font-size:.75rem;font-weight:700}
+  .gaplist .act{color:var(--muted);font-size:.77rem}
+  .priority{padding:13px 15px;margin-bottom:12px;border-radius:9px;background:var(--soft);font-size:.83rem}
+  .priority ol{margin:6px 0 0;padding-left:19px}
+  .priority li{margin-bottom:2px}
+  .nogaps{color:var(--met);font-size:.83rem}
 
-
-  /* ---------- report builder + draft ---------- */
-  .report-wrap{display:grid;grid-template-columns:236px minmax(0,1fr);gap:20px;align-items:start;margin-top:18px}
-  .builder{position:sticky;top:14px;padding:18px 19px;border:1px solid var(--line);border-radius:12px;background:#fff}
-  .builder h3{margin:0 0 2px;font-size:.92rem}
-  .bgroup{margin-top:18px;padding-top:14px;border-top:1px solid var(--line)}
-  .bgroup:first-of-type{border-top:0;padding-top:0}
-  .blabel{margin-bottom:8px;color:#4a656b;font-size:.68rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
-  .bopt{display:flex;gap:8px;align-items:flex-start;margin-bottom:7px;font-size:.79rem;cursor:pointer;line-height:1.35}
-  .bopt input{margin-top:2px;accent-color:var(--teal);width:14px;height:14px;flex:none}
-  .prog{height:6px;border-radius:99px;background:#e9f0f0;overflow:hidden}
+  /* ---- report ---- */
+  .report-wrap{display:grid;grid-template-columns:212px minmax(0,1fr);gap:18px;align-items:start}
+  .builder{position:sticky;top:70px;padding:16px 17px;border:1px solid var(--line);border-radius:12px;background:#fff}
+  .builder h3{margin:0 0 10px;font-size:.72rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:#4a656b}
+  .bgroup{margin-top:15px;padding-top:12px;border-top:1px solid var(--line)}
+  .bgroup:first-of-type{border-top:0;padding-top:0;margin-top:0}
+  .blabel{margin-bottom:7px;color:#4a656b;font-size:.65rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase}
+  .bopt{display:flex;gap:7px;align-items:flex-start;margin-bottom:6px;font-size:.77rem;cursor:pointer;line-height:1.3}
+  .bopt input{margin-top:2px;accent-color:var(--teal);width:13px;height:13px;flex:none}
+  .prog{height:5px;border-radius:99px;background:#e9f0f0;overflow:hidden}
   .prog-bar{height:100%;background:var(--teal);transition:width .25s}
 
-  .draft{margin:-6px 0 20px;padding:12px 15px;border-radius:9px;border-left:4px solid var(--nodoc);
-    background:var(--nodoc-bg);color:#6d4703;font-size:.81rem;line-height:1.5}
-  .draft b{display:block;margin-bottom:2px;letter-spacing:.03em}
+  .doc{padding:26px 30px;border:1px solid var(--line);border-radius:12px;background:#fff}
+  .draft{margin:0 0 20px;padding:10px 13px;border-radius:8px;border-left:3px solid var(--nodoc);
+    background:var(--nodoc-bg);color:#6d4703;font-size:.79rem}
+  .draft b{display:block}
   .draft.ready{border-left-color:var(--met);background:var(--met-bg);color:#0c5c39}
-
-  .lock{margin-left:8px;padding:2px 7px;border-radius:99px;background:#eef3f3;color:#5c7176;
-    font-size:.6rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;vertical-align:2px}
-  .tagx{margin-left:6px;padding:2px 7px;border-radius:99px;background:var(--nodoc-bg);color:#7a4e05;
-    font-size:.6rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;vertical-align:1px}
+  .doc-head{padding-bottom:14px;border-bottom:2px solid var(--ink);margin-bottom:20px}
+  .doc-head h3{margin:0;font-family:Georgia,serif;font-size:1.4rem;font-weight:400;letter-spacing:-.02em}
+  .doc-head p{margin:5px 0 0;color:var(--muted);font-size:.78rem}
+  .doc h4{margin:24px 0 9px;font-size:.68rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:#4a656b}
+  .doc h4:first-of-type{margin-top:0}
+  .figure{margin-bottom:4px;padding:15px 17px;border:1px solid var(--line);border-radius:10px;background:#fcfcfb}
+  .lock,.tagx{margin-left:7px;padding:2px 6px;border-radius:99px;background:#eef3f3;color:#5c7176;
+    font-size:.58rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;vertical-align:2px}
+  .tagx{background:var(--nodoc-bg);color:#7a4e05}
   .tagx.edit{background:var(--soft);color:var(--teal-dark)}
 
-  .nsec{margin-bottom:12px;border:1px solid var(--line);border-radius:10px;background:#fff;overflow:hidden}
-  .nsec.done{border-color:#bfe3cf;background:#fbfefc}
-  .nhead{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;
-    padding:9px 14px;border-bottom:1px solid var(--line);background:#f8fbfb}
-  .nsec.done .nhead{background:var(--met-bg);border-bottom-color:#cfe8da}
-  .ntitle{font-size:.7rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#4a656b}
-  .nact{display:flex;gap:12px;align-items:center}
-  .chk{display:flex;gap:6px;align-items:center;font-size:.75rem;color:#4a656b;cursor:pointer}
-  .chk input{accent-color:var(--teal);width:14px;height:14px}
-  .linkbtn{padding:0;background:none;color:var(--teal-dark);font-size:.73rem;font-weight:700;
-    text-decoration:underline;box-shadow:none}
-  .linkbtn:hover{background:none;color:var(--ink);transform:none;box-shadow:none}
-  .nbody{padding:13px 15px;font-family:Georgia,serif;font-size:.93rem;line-height:1.62;outline:none}
-  .nbody:focus{background:#fffdf5;box-shadow:inset 0 0 0 2px rgba(8,127,121,.18)}
+  .nsec{margin-bottom:10px;border:1px solid var(--line);border-radius:9px;overflow:hidden}
+  .nsec.done{border-color:#c9e6d7}
+  .nhead{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
+    padding:8px 13px;border-bottom:1px solid var(--line);background:#fafcfc}
+  .nsec.done .nhead{background:var(--met-bg);border-bottom-color:#d5ebe0}
+  .ntitle{font-size:.66rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#4a656b}
+  .nact{display:flex;gap:11px;align-items:center}
+  .chk{display:flex;gap:5px;align-items:center;font-size:.73rem;color:#4a656b;cursor:pointer}
+  .chk input{accent-color:var(--teal);width:13px;height:13px}
+  .linkbtn{padding:0;background:none;color:var(--teal-dark);font-size:.72rem;text-decoration:underline}
+  .linkbtn:hover{background:none;color:var(--ink)}
+  .nbody{padding:12px 14px;font-family:Georgia,serif;font-size:.9rem;line-height:1.6;outline:none}
+  .nbody:focus{background:#fffdf5;box-shadow:inset 0 0 0 2px rgba(8,127,121,.16)}
 
-  .priority{padding:16px 18px;border:1px solid #cfe0e0;border-radius:10px;background:var(--soft)}
-  .priority .pbig{margin:0 0 8px;font-size:.95rem}
-  .priority ol{margin:0 0 8px;padding-left:20px;font-size:.86rem}
-  .priority li{margin-bottom:4px}
+  table.stats{font-size:.78rem}
+  table.stats td.num,table.stats th.num{text-align:right;font-variant-numeric:tabular-nums}
+  table.stats tbody td:first-child{font-weight:700}
+  table.plan td{vertical-align:top;padding:9px 6px}
+  table.plan select{font-size:.74rem;padding:5px 7px;margin-bottom:5px}
+  .pin{width:100%;min-height:0;border:1px solid var(--line);border-radius:6px;padding:6px 8px;font:inherit;
+    font-size:.77rem;line-height:1.4;background:#fff;color:var(--ink);outline:none;resize:vertical}
+  textarea.pin{height:66px}
+  .kindtag{display:inline-block;margin-top:4px;padding:2px 6px;border-radius:99px;background:#eef3f3;
+    color:#5c7176;font-size:.6rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase}
+  .sub2{color:var(--muted);font-size:.71rem;font-weight:400}
+  .ip{margin:22px 0 0;padding-top:12px;border-top:1px solid var(--line);color:var(--muted);font-size:.72rem;line-height:1.5}
 
-  table.plan td{vertical-align:top}
-  table.plan select{font-size:.75rem;padding:6px 7px;margin-bottom:6px}
-  .pin{width:100%;min-height:0;border:1px solid var(--line);border-radius:6px;padding:7px 8px;font:inherit;
-    font-size:.78rem;line-height:1.4;background:#fff;color:var(--ink);outline:none;resize:vertical}
-  textarea.pin{height:68px}
-  .pin:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(8,127,121,.12)}
-  .kindtag{display:inline-block;margin-top:5px;padding:2px 7px;border-radius:99px;background:#eef3f3;
-    color:#5c7176;font-size:.62rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase}
-  .sub2{color:var(--muted);font-size:.72rem;font-weight:400}
+  .warn{margin-top:10px;padding:9px 12px;border-radius:8px;background:var(--nodoc-bg);color:#7a4e05;font-size:.78rem}
+  .foot{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;
+    margin-top:26px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:.75rem}
+  .foot details.mini{margin:0;flex:1 1 320px;max-width:640px;background:none;border-color:var(--line)}
+  .foot details.mini>summary{gap:20px}
 
-  .ip{margin:26px 0 0;padding-top:14px;border-top:1px solid var(--line);color:var(--muted);font-size:.74rem;line-height:1.55}
-
-  @media (max-width:1100px){.report-wrap{grid-template-columns:1fr}.builder{position:static}}
   @media print{
+    .bar,.foot,.builder,.draft,.lock,.tagx,.nact,.card-head{display:none !important}
     body{background:#fff}
     .shell{width:100%;padding:0}
-    header.top,details.prep,.workspace,.safety,.btnrow,.demo-badge{display:none !important}
-    .report{border:0;box-shadow:none;padding:0}
-    .report-wrap{display:block}
-    .builder,.draft,.lock,.tagx,.nact{display:none !important}
-    .nsec{border:0;margin:0}
-    .nhead{background:none;border:0;padding:0 0 4px}
-    .nbody{padding:0 0 12px}
-    .pin,select{border:0;padding:0;background:none;font-size:.8rem}
-    .report>h2,.report>.hint{display:none}
+    .view{display:none !important}
+    .view#v-report{display:block !important}
+    .report-wrap{display:block !important}
     .doc{border:0;padding:0}
+    .nsec{border:0;margin:0}
+    .nhead{background:none;border:0;padding:0 0 3px}
+    .nbody{padding:0 0 11px}
+    .pin,select{border:0;padding:0;background:none;font-size:.78rem}
     .figure{break-inside:avoid}
   }
-  @media (max-width:1000px){.workspace{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
+<header class="bar">
+  <div class="bar-in">
+    <div class="brand"><span class="mark"></span>AuditPilot</div>
+    <nav class="tabs" id="tabs">
+      <button class="tab on" data-view="setup">Set up</button>
+      <button class="tab" data-view="table" disabled>Table</button>
+      <button class="tab" data-view="findings" disabled>Findings</button>
+      <button class="tab" data-view="report" disabled>Report</button>
+    </nav>
+    <div class="bar-end"><span id="hdr-status" class="hstat">No data</span><span class="pill">Demo data</span></div>
+  </div>
+</header>
+
 <main class="shell">
 
-  <header class="top">
-    <div>
-      <p class="eyebrow">Clinical admin, reimagined</p>
-      <h1>AuditPilot</h1>
-      <p class="sub">The clinical audit step that eats your evening: reading every set of notes against every criterion
-        and filling in the table. Paste the notes, get the table — with the source sentence under every judgement.</p>
-    </div>
-    <div class="demo-badge">DEMO · FICTIONAL DATA ONLY</div>
-  </header>
-
-  <details class="panel prep" open>
-    <summary>Before you start — is this audit ready to run?</summary>
-    <ul class="prep-list">
-      <li><input type="checkbox" id="p1"><label for="p1">A clear published standard exists for this topic (e.g. NICE, Royal College, trust policy)</label></li>
-      <li><input type="checkbox" id="p2"><label for="p2">Nobody has audited this topic recently — checked with your supervisor or the audit/QI department</label></li>
-      <li><input type="checkbox" id="p3"><label for="p3">The project is registered with the audit/QI department if your trust requires it</label></li>
-      <li><input type="checkbox" id="p4"><label for="p4">The sample is defined: typically 30–50 patients from the last 1–3 months, with a clear inclusion criterion</label></li>
-      <li><input type="checkbox" id="p5"><label for="p5">Data collection criteria are fixed before you start — they must not change mid-audit</label></li>
-    </ul>
-  </details>
-
-  <div class="workspace">
-
-    <!-- LEFT -->
-    <section class="panel left">
-      <h2>1 · Set up the check</h2>
-      <p class="hint">Criteria are fixed for every case. That is what makes it an audit rather than a conversation.</p>
-
-      <div class="field" style="margin-top:18px">
-        <label class="lbl" for="template">Audit template</label>
-        <select id="template">
-          <option value="amr">Antimicrobial prescribing (NICE NG15 / Start Smart Then Focus)</option>
-          <option value="vte">VTE risk assessment (NICE NG89)</option>
-          <option value="custom">Custom criteria…</option>
-        </select>
-        <div id="std-src" class="src"></div>
-      </div>
-
-      <div class="field" id="criteria-view">
-        <label class="lbl">Criteria applied to every case</label>
+<!-- ============ SET UP ============ -->
+<section class="view on" id="v-setup">
+  <div class="grid2">
+    <div class="card">
+      <h2>Standard</h2>
+      <select id="template">
+        <option value="amr">Antimicrobial prescribing — NICE NG15</option>
+        <option value="vte">VTE risk assessment — NICE NG89</option>
+        <option value="custom">Custom criteria</option>
+      </select>
+      <p class="src" id="std-src"></p>
+      <details class="mini" id="criteria-view">
+        <summary>Criteria <span id="crit-count"></span></summary>
         <ul class="crit-list" id="crit-list"></ul>
+      </details>
+      <div id="custom-view" style="display:none">
+        <label class="lbl" for="custom-crit">One criterion per line</label>
+        <textarea id="custom-crit" rows="5" placeholder="Pain score recorded within 30 minutes&#10;Analgesia given within 60 minutes"></textarea>
+        <p class="src">Keyword matching only — every hit is marked <b>Needs review</b>. Use the Claude engine for full custom checking.</p>
       </div>
 
-      <div class="field" id="custom-view" style="display:none">
-        <label class="lbl" for="custom-crit">Your criteria — one per line</label>
-        <textarea id="custom-crit" placeholder="Pain score recorded within 30 minutes of arrival&#10;Analgesia given within 60 minutes&#10;Reassessment documented"></textarea>
-        <p class="hint">The built-in engine matches custom criteria by keyword only, so it marks every hit
-          <b>Needs review</b> rather than Met. For full custom-criteria checking, switch the engine to Claude below.</p>
+      <h2 class="mt">Engine</h2>
+      <select id="engine">
+        <option value="local">Built-in rules — offline, deterministic</option>
+        <option value="claude">Claude (claude-opus-5)</option>
+      </select>
+      <div class="apirow" id="apirow">
+        <input type="password" id="apikey" placeholder="Anthropic API key — memory only" autocomplete="off">
       </div>
 
-      <div class="field">
-        <label class="lbl" for="notes">Case notes — separate cases with a line containing only <code>---</code></label>
-        <textarea id="notes" placeholder="Paste case notes here…"></textarea>
-        <div class="samples">
-          <button class="ghost tiny" data-load="A">Load case A</button>
-          <button class="ghost tiny" data-load="B">Load case B</button>
-          <button class="ghost tiny" data-load="C">Load case C</button>
-          <button class="ghost tiny" data-load="D">Load case D (conflict)</button>
-          <button class="ghost tiny" data-load="ALL">Load all four</button>
-          <button class="ghost tiny" data-load="30" style="background:#d5ebe8">Load 30-case sample</button>
-        </div>
-      </div>
+      <details class="mini mt">
+        <summary>Before you start</summary>
+        <ul class="prep-list">
+          <li><input type="checkbox" id="p1"><label for="p1">A published standard exists for this topic</label></li>
+          <li><input type="checkbox" id="p2"><label for="p2">Nobody has audited it recently</label></li>
+          <li><input type="checkbox" id="p3"><label for="p3">Registered with audit/QI if required</label></li>
+          <li><input type="checkbox" id="p4"><label for="p4">Sample defined — 30–50 cases, clear inclusion</label></li>
+          <li><input type="checkbox" id="p5"><label for="p5">Criteria fixed before starting</label></li>
+        </ul>
+      </details>
+    </div>
 
-      <div class="field">
-        <label class="lbl" for="engine">Checking engine</label>
-        <select id="engine">
-          <option value="local">Built-in rule engine — offline, deterministic, no data leaves this page</option>
-          <option value="claude">Claude (claude-opus-5) — handles free-text and custom criteria</option>
-        </select>
-        <div class="apirow" id="apirow">
-          <input type="password" id="apikey" placeholder="Anthropic API key — held in memory only, never stored" autocomplete="off">
-          <p class="hint">Sends the pasted text to the Anthropic API. Synthetic notes only in this demo.</p>
-        </div>
-      </div>
-
+    <div class="card">
+      <h2>Case notes</h2>
+      <p class="src">Separate cases with a line containing only <code>---</code></p>
+      <textarea id="notes" placeholder="Paste case notes…"></textarea>
       <div class="btnrow">
-        <button id="run">Check documentation →</button>
-        <button class="quiet" id="clear">Clear all</button>
+        <button id="run">Check documentation</button>
+        <button class="quiet" id="clear">Clear</button>
       </div>
       <div id="err" class="warn" style="display:none"></div>
-    </section>
 
-    <!-- RIGHT -->
-    <section class="panel right">
-      <div class="right-head">
-        <div>
-          <h2>2 · Audit table</h2>
-          <p class="hint">One row per case, one column per criterion. Click any cell to see the source sentence.</p>
-        </div>
-        <div style="display:flex;gap:7px">
-          <button class="ghost tiny" id="confirm-all" disabled>Confirm all rows</button>
-          <button class="ghost tiny" id="csv" disabled>Export CSV</button>
-        </div>
-      </div>
-      <div id="scopebar" class="scopebar" style="display:none"></div>
-      <div id="results">
-        <div class="empty">
-          <div>
-            <div class="ico">▤</div>
-            <p>Load a case on the left and press <b>Check documentation</b>. Nothing is sent anywhere and nothing is stored.</p>
-          </div>
-        </div>
-      </div>
-      <div id="evidence" class="evidence"></div>
-      <div id="gaps"></div>
-    </section>
+      <details class="mini mt" open>
+        <summary>Sample cases</summary>
+        <ul class="samples">
+          <li data-load="30"><b>30-case sample</b><span>full audit — ward and admission data</span></li>
+          <li data-load="ALL"><b>Four cases</b><span>short demo</span></li>
+          <li data-load="A"><b>Case A</b><span>well documented — expect 7/7</span></li>
+          <li data-load="B"><b>Case B</b><span>gappy notes — expect 1/7</span></li>
+          <li data-load="C"><b>Case C</b><span>middling — expect 5/7</span></li>
+          <li data-load="D"><b>Case D</b><span>contradictory allergy record</span></li>
+        </ul>
+      </details>
+    </div>
   </div>
+</section>
 
-  <section class="panel report">
-    <h2>3 · Audit report</h2>
-    <p class="hint">Drafts the standard write-up (Introduction, Aim, Standard, Methods, Results, Discussion, Conclusion)
-      from the confirmed table, plus an action plan with an owner and a date against every gap. A <b>draft</b>: you read it, correct it, and mark each section checked. Figures and statistics stay as calculated.</p>
-    <div class="btnrow">
-      <button class="ghost" id="report-btn" disabled>Draft audit report</button>
-      <button class="quiet" id="copy-btn" style="display:none">Copy narrative</button>
-      <button class="quiet" id="print-btn" style="display:none">Print / save as PDF</button>
+<!-- ============ TABLE ============ -->
+<section class="view" id="v-table">
+  <div id="scopebar" class="scopebar"></div>
+  <div class="grid-table">
+    <div class="card pad0">
+      <div class="card-head">
+        <h2>Audit table</h2>
+        <div class="hgroup">
+          <button class="ghost tiny" id="confirm-all" disabled>Confirm all</button>
+          <button class="ghost tiny" id="csv" disabled>CSV</button>
+        </div>
+      </div>
+      <div id="results"></div>
     </div>
-    <div id="report-wrap" class="report-wrap" style="display:none">
-      <aside id="builder" class="builder"></aside>
-      <div id="report-doc"></div>
-    </div>
-  </section>
+    <aside class="card evidence-panel" id="evidence"></aside>
+  </div>
+</section>
 
-  <section class="panel safety">
-    <h3>Where the human stays in control</h3>
-    <ul>
-      <li><b>Documentation only.</b> AuditPilot judges whether the notes record something. It never judges whether the clinical care was right, and never suggests a treatment change.</li>
-      <li><b>Every judgement quotes its source.</b> If the tool cannot quote a sentence from the notes, the answer is <i>Not documented</i> — never an assumption that it probably happened.</li>
-      <li><b>Conflicts stop the machine.</b> Where the notes contradict themselves, the cell returns <i>Needs review</i> and refuses to pick a side.</li>
-      <li><b>The clinician signs off each row.</b> No row counts towards the report until it is confirmed. The tool proposes; the human decides.</li>
-      <li><b>No storage, no integration.</b> No database, no login, no localStorage. Refresh the page and it is gone.</li>
-      <li><b>Improvement actions change the record, not the care.</b> Every suggested action is a form field, a system setting,
-        a ward-round routine or a teaching point about recording. Nothing recommends a drug, a dose or a clinical threshold,
-        and nothing is generated for an individual patient.</li>
+<!-- ============ FINDINGS ============ -->
+<section class="view" id="v-findings">
+  <div class="quad" id="findings"></div>
+</section>
+
+<!-- ============ REPORT ============ -->
+<section class="view" id="v-report">
+  <div class="card-head flat">
+    <h2>Audit report</h2>
+    <div class="hgroup">
+      <button class="ghost tiny" id="report-btn" disabled>Draft report</button>
+      <button class="quiet tiny" id="copy-btn" style="display:none">Copy</button>
+      <button class="quiet tiny" id="print-btn" style="display:none">Print / PDF</button>
+    </div>
+  </div>
+  <div id="report-wrap" class="report-wrap" style="display:none">
+    <aside id="builder" class="builder"></aside>
+    <div id="report-doc"></div>
+  </div>
+</section>
+
+<footer class="foot">
+  <details class="mini">
+    <summary>Scope and safety</summary>
+    <ul class="safe">
+      <li><b>Documentation only.</b> Never a judgement on clinical care.</li>
+      <li><b>Every judgement quotes its source.</b> No quote means <i>Not documented</i>, never an assumption.</li>
+      <li><b>Conflicts stop the machine.</b> Contradictory notes return <i>Needs review</i>.</li>
+      <li><b>The clinician signs off each row</b> before it reaches the report.</li>
+      <li><b>Actions change the record, not the care</b> — form fields, system settings, ward routines. Never a drug, dose or threshold.</li>
+      <li><b>Nothing stored.</b> No database, no login, no localStorage.</li>
     </ul>
-    <p class="hint" style="margin-top:12px">AuditPilot is a documentation audit and service-evaluation tool. It reports whether
-      information is present in a record and summarises that across a sample. It does not diagnose, does not assess or recommend
-      treatment, produces nothing specific to an individual patient, and is not a medical device.</p>
-  </section>
-
-  <footer class="foot">
-    AuditPilot checks documentation against published criteria. It does not assess clinical care. Nothing is stored.
-    · <a href="handover.html">Handover note generator</a>
-  </footer>
+    <p>AuditPilot is a documentation audit and service-evaluation tool. It does not diagnose, does not assess or
+      recommend treatment, produces nothing specific to an individual patient, and is not a medical device.</p>
+  </details>
+  <span>AuditPilot · fictional data · <a href="handover.html">Handover generator</a></span>
+</footer>
 </main>
 <div id="tip" role="status"></div>
 
@@ -628,11 +621,12 @@ function renderCriteriaList(){
   const v=$('template').value;
   $('custom-view').style.display = v==='custom'?'block':'none';
   $('criteria-view').style.display = v==='custom'?'none':'block';
-  if(v==='custom'){ $('std-src').textContent='Standard: whatever you paste below.'; return; }
+  if(v==='custom'){ $('std-src').textContent='Your own criteria, applied identically to every case.'; return; }
   const t=TEMPLATES[v];
-  $('std-src').textContent='Standard: '+t.standard;
+  $('std-src').textContent=t.standard;
+  $('crit-count').textContent=t.criteria.length;
   $('crit-list').innerHTML=t.criteria.map((c,i)=>
-    `<li><span class="n">${i+1}</span><span><b>${esc(c.name)}</b><br>${esc(c.help)}</span></li>`).join('');
+    `<li><b>${i+1}. ${esc(c.name)}</b><br>${esc(c.help)}</li>`).join('');
 }
 
 function render(){ renderSummary(); renderTable(); }
@@ -645,15 +639,15 @@ function renderSummary(){
   const met=count(MET), nd=count(NODOC), nm=count(NOTMET), rv=count(REVIEW);
   const confirmed=rows.filter(r=>r.confirmed).length;
 
-  $('scopebar').style.display='flex';
   $('scopebar').innerHTML=
     `<span class="stat">${N} case${N>1?'s':''} · ${M} criteria · ${total} checks</span>`+
     `<span class="stat g">${met} met</span>`+
     `<span class="stat a">${nd} not documented</span>`+
     (nm?`<span class="stat r">${nm} not met</span>`:'')+
     (rv?`<span class="stat p">${rv} need review</span>`:'')+
-    `<span class="stat">${confirmed}/${N} rows confirmed by clinician</span>`;
-  renderGaps();
+    `<span class="stat">${confirmed}/${N} confirmed</span>`;
+  $('hdr-status').textContent=`${N} cases · ${Math.round(100*met/total)}% documented · ${confirmed}/${N} confirmed`;
+  renderFindings();
 }
 
 function renderTable(){
@@ -678,22 +672,69 @@ function renderTable(){
   $('csv').disabled=false;
   $('report-btn').disabled=false;
   $('confirm-all').disabled=false;
+  document.querySelectorAll('.tab').forEach(t=>t.disabled=false);
 }
 
-function renderGaps(){
-  const {rows,tpl}=STATE, N=rows.length;
-  const gapIdx=tpl.criteria.map((c,ci)=>({ci,c,
-      fails:rows.filter(r=>r.cells[ci].status!==MET).length}))
-    .filter(x=>x.fails>0).sort((a,b)=>b.fails-a.fails);
+let FIG4='dist';
 
-  $('gaps').innerHTML=`<div class="gaps"><h3>Gaps and suggested documentation actions</h3>`+
-    (gapIdx.length
-      ? `<p class="hint">Ranked by how often the criterion is missing across the sample. Actions address the record, never the treatment.</p><ul>`+
-        gapIdx.map(x=>`<li><b>${esc(x.c.name)}</b> — missing in ${x.fails} of ${N} case${N>1?'s':''}. `+
-          `Suggested action: ${esc(ACTIONS[x.c.short]||'add a required field for this item to the ward proforma so it cannot be left blank.')}</li>`).join('')+
-        `</ul>`
-      : `<p class="nogaps">All criteria documented in all cases. No documentation gaps identified in this sample.</p>`)+
-    `</div>`;
+function renderFindings(){
+  const S=computeStats(), {rows,tpl}=STATE, N=S.N, M=S.M;
+  const gaps=S.ranked.filter(x=>x.missing>0);
+  const groups=groupBy(rows,REPORT.subgroupBy,M);
+  const dims=S.dims;
+
+  const q4 = FIG4==='dist'
+    ? `<div class="capsub">How many criteria each case documented.</div>${svgHistogram(S.dist,M,N)}`
+    : FIG4==='matrix'
+    ? `<div class="capsub">Criteria missing in the <b>same</b> case — two that always fail together are usually one broken step.</div>${svgMatrix(rows,tpl)}`
+    : `<div class="capsub">${groups.length>1
+        ? `${esc(groups[0].key)} ${groups[0].pct}% against ${esc(groups[groups.length-1].key)} ${groups[groups.length-1].pct}% — target the change.`
+        : 'Compliance across the groups collected.'}</div>${svgSubgroup(groups,M,S.pct,REPORT.subgroupBy)}`;
+
+  $('findings').innerHTML=
+  `<div class="card">
+     <h2>Summary</h2>
+     <div class="tiles">
+       <div class="tile"><div class="v">${S.pct}%</div><div class="k">Documented</div><div class="sub">${S.totalMet}/${S.totalChecks} checks</div></div>
+       <div class="tile"><div class="v">${S.notDoc}</div><div class="k">Not documented</div><div class="sub">${Math.round(100*S.notDoc/S.totalChecks)}% of checks</div></div>
+       <div class="tile"><div class="v">${S.full}<span style="font-size:1rem;color:#9aa8ab">/${N}</span></div><div class="k">Fully compliant</div><div class="sub">all ${M} criteria</div></div>
+       <div class="tile"><div class="v">${S.needsReview}</div><div class="k">Need review</div><div class="sub">record unclear</div></div>
+     </div>
+     ${S.priority.length?`<div class="priority mt">
+       <b>${S.priority.length} of ${M} criteria = ${S.priorityShare}% of all gaps.</b>
+       <ol>${S.priority.map(x=>`<li>${esc(x.c.name)} — ${x.pct}%</li>`).join('')}</ol>
+     </div>`:''}
+   </div>
+
+   <div class="card figure">
+     <div class="cap">Compliance by criterion</div>
+     <div class="capsub">Worst first. A criterion short across the sample is a form problem, not a practice problem.</div>
+     ${legend()}${svgStacked(S.ranked,N)}
+   </div>
+
+   <div class="card">
+     <h2>Gaps and suggested actions</h2>
+     ${gaps.length?`<ul class="gaplist">${gaps.map(x=>
+       `<li><b>${esc(x.c.name)}</b><span class="miss">missing in ${x.missing} of ${N}</span>
+        <span class="act">${esc(optionsFor(x.c.short)[0][1])}</span></li>`).join('')}</ul>`
+      : '<p class="nogaps">All criteria documented in all cases.</p>'}
+   </div>
+
+   <div class="card figure">
+     <div class="card-head flat" style="align-items:flex-start">
+       <div class="cap">${FIG4==='dist'?'Completeness':FIG4==='matrix'?'Gaps that occur together':'By '+esc(REPORT.subgroupBy.toLowerCase())}</div>
+       <div class="hgroup">
+         ${dims.length?`<select id="f4dim" style="width:auto;font-size:.74rem;padding:5px 8px;${FIG4==='sub'?'':'display:none'}">
+           ${dims.map(d=>`<option ${d===REPORT.subgroupBy?'selected':''}>${d}</option>`).join('')}</select>`:''}
+         <div class="seg-ctl">
+           <button data-f4="dist" class="${FIG4==='dist'?'on':''}">Spread</button>
+           <button data-f4="matrix" class="${FIG4==='matrix'?'on':''}">Together</button>
+           ${dims.length?`<button data-f4="sub" class="${FIG4==='sub'?'on':''}">Subgroup</button>`:''}
+         </div>
+       </div>
+     </div>
+     ${q4}
+   </div>`;
 }
 
 const ACTIONS={
@@ -1010,7 +1051,7 @@ $('run').addEventListener('click',async()=>{
   if(!tpl.criteria.length) return fail('Enter at least one criterion.');
   const cases=splitCases(text);
   const btn=$('run'); btn.disabled=true; btn.textContent='Checking…';
-  $('evidence').innerHTML='';
+  $('evidence').innerHTML=EV_EMPTY;
   try{
     let rows;
     if($('engine').value==='claude'){
@@ -1020,25 +1061,27 @@ $('run').addEventListener('click',async()=>{
     }else{
       rows=runLocal(cases,tpl);
     }
-    STATE={rows,tpl};
+    STATE={rows,tpl}; REPORT.built=false;
     $('report-wrap').style.display='none'; $('copy-btn').style.display='none'; $('print-btn').style.display='none';
-    render();
+    render(); showView('table');
   }catch(err){
     fail(err.message||'Check failed.');
   }finally{
-    btn.disabled=false; btn.textContent='Check documentation →';
+    btn.disabled=false; btn.textContent='Check documentation';
   }
 });
 
 $('clear').addEventListener('click',()=>{
   $('notes').value=''; STATE=null;
-  $('scopebar').style.display='none'; $('evidence').innerHTML=''; $('gaps').innerHTML='';
+  $('scopebar').innerHTML='';
   $('err').style.display='none';
   $('report-wrap').style.display='none'; $('copy-btn').style.display='none'; $('print-btn').style.display='none';
   $('csv').disabled=true; $('report-btn').disabled=true; $('confirm-all').disabled=true;
   $('confirm-all').textContent='Confirm all rows';
-  $('results').innerHTML=`<div class="empty"><div><div class="ico">▤</div>
-    <p>Load a case on the left and press <b>Check documentation</b>. Nothing is sent anywhere and nothing is stored.</p></div></div>`;
+  $('results').innerHTML='<p class="src" style="padding:26px 20px">Load a sample case and press <b>Check documentation</b>.</p>';
+  $('findings').innerHTML=''; $('evidence').innerHTML=EV_EMPTY;
+  document.querySelectorAll('.tab').forEach(t=>{ if(t.dataset.view!=='setup') t.disabled=true; });
+  showView('setup'); $('hdr-status').textContent='No data';
 });
 
 $('csv').addEventListener('click',()=>{
@@ -1343,7 +1386,7 @@ function renderBuilder(S){
     ['priority','Priority — fix these first'],['plan','Action plan'],['narrative','Written report']];
   $('builder').innerHTML=
    `<h3>Report builder</h3>
-    <p class="hint">Nothing is added to the report unless you choose it.</p>
+    <p class="src">Choose what the report contains.</p>
     <div class="bgroup">
       <div class="blabel">Include</div>
       ${opts.map(([k,l])=>`<label class="bopt"><input type="checkbox" data-inc="${k}" ${REPORT.include[k]?'checked':''}> ${l}</label>`).join('')}
@@ -1351,12 +1394,12 @@ function renderBuilder(S){
     ${S.dims.length?`<div class="bgroup">
       <div class="blabel">Break down by</div>
       <select id="subdim">${S.dims.map(d=>`<option ${d===REPORT.subgroupBy?'selected':''}>${d}</option>`).join('')}</select>
-      <p class="hint" style="margin-top:6px">Read from the fields collected with each case.</p>
+      <p class="src">From fields collected with each case.</p>
     </div>`:''}
     <div class="bgroup">
       <div class="blabel">Review progress</div>
       <div class="prog"><div class="prog-bar" style="width:${Math.round(100*rev/SECTIONS.length)}%"></div></div>
-      <p class="hint" style="margin-top:6px">${rev} of ${SECTIONS.length} written sections marked as checked.</p>
+      <p class="src">${rev} of ${SECTIONS.length} sections checked.</p>
     </div>`;
 }
 
@@ -1395,9 +1438,8 @@ function planTable(S){
         <td><textarea class="pin" data-plan="${i}" data-f="measure" rows="2">${esc(p.measure)}</textarea></td>
       </tr>`).join('')}</tbody>
   </table></div>
-  <p class="capsub" style="margin-top:9px">Every option offered changes how something is <b>recorded</b> — a form field, a system setting,
-  a ward-round routine or a teaching point. None of them changes clinical management, and none is specific to a patient.
-  The choice, the owner and the date are yours.</p>`;
+  <p class="capsub" style="margin-top:9px">Every option changes how something is <b>recorded</b> — a form field, a system setting,
+  a ward routine, a teaching point. None changes clinical management; none is patient-specific.</p>`;
 }
 
 function renderDoc(S){
@@ -1412,8 +1454,8 @@ function renderDoc(S){
   <div class="draft ${rev===SECTIONS.length?'ready':''}">
     <b>${rev===SECTIONS.length?'Draft checked':'DRAFT — not yet checked'}</b>
     ${rev===SECTIONS.length
-      ? 'Every written section has been read and marked as checked. Figures and statistics remain as calculated.'
-      : `Read each written section, edit anything that is wrong, and mark it checked. ${rev} of ${SECTIONS.length} done. Figures and statistics are calculated from the ${S.confirmed} confirmed rows and cannot be edited.`}
+      ? 'Every written section has been read and checked. Figures and statistics remain as calculated.'
+      : `Read each written section, correct anything wrong, mark it checked — ${rev} of ${SECTIONS.length} done. Figures and statistics are calculated from ${S.confirmed} confirmed rows and cannot be edited.`}
   </div>
 
   <div class="doc-head">
@@ -1430,24 +1472,22 @@ function renderDoc(S){
   </div>`:''}
 
   ${inc.fig1?`<h4>Figure 1 — Documentation status by criterion ${lock}</h4>
-  <div class="figure"><div class="cap">Every criterion, every case, ranked worst first</div>
-    <div class="capsub">Read this vertically: a criterion that is short across the whole sample is a form problem, not a practice problem.</div>
+  <div class="figure"><div class="cap">Every criterion, every case — ranked worst first</div>
     ${legend()}${svgStacked(S.ranked,N)}</div>`:''}
 
   ${inc.fig2?`<h4>Figure 2 — Distribution of documentation completeness ${lock}</h4>
-  <div class="figure"><div class="cap">How many of the ${M} criteria each case documented</div>
-    <div class="capsub">Separates "a few poorly documented cases" from "every case misses the same things".</div>
+  <div class="figure"><div class="cap">Criteria documented per case</div>
     ${svgHistogram(S.dist,M,N)}</div>`:''}
 
   ${inc.matrix?`<h4>Figure — Gaps that occur together ${lock}</h4>
   <div class="figure"><div class="cap">Criteria missing in the same case</div>
-    <div class="capsub">Two criteria that always fail together are usually one broken step in the workflow, not two separate problems — and one change may fix both.</div>
+    <div class="capsub">Criteria that fail together usually share one broken step in the workflow.</div>
     ${svgMatrix(STATE.rows,tpl)}</div>`:''}
 
   ${inc.subgroup&&groups.length?`<h4>Figure — Documented compliance by ${esc(REPORT.subgroupBy.toLowerCase())} ${lock}</h4>
-  <div class="figure"><div class="cap">Where in the service the record falls short</div>
+  <div class="figure"><div class="cap">Where the record falls short</div>
     <div class="capsub">${worstG&&bestG&&worstG.key!==bestG.key
-      ? `${esc(worstG.key)} documents ${worstG.pct}% against ${esc(bestG.key)} at ${bestG.pct}%. A gap this size usually means the change should be targeted, not trust-wide.`
+      ? `${esc(worstG.key)} ${worstG.pct}% against ${esc(bestG.key)} ${bestG.pct}% — target the change rather than the whole trust.`
       : 'Compliance is even across the groups collected.'}</div>
     ${svgSubgroup(groups,M,S.pct,REPORT.subgroupBy)}</div>`:''}
 
@@ -1466,7 +1506,7 @@ function renderDoc(S){
     <p class="pbig">${S.priority.length} of the ${M} criteria account for <b>${S.priorityShare}%</b> of all missing documentation
       (${S.priorityCum} of ${S.totalMissing} checks).</p>
     <ol>${S.priority.map(x=>`<li><b>${esc(x.c.name)}</b> — missing in ${x.missing} of ${N} cases (documented ${x.pct}%)</li>`).join('')}</ol>
-    <p class="capsub">Seven half-finished actions change nothing. These are the fewest changes that recover the most of the shortfall.</p>
+    <p class="capsub">The fewest changes that recover the most of the shortfall.</p>
   </div>`:''}
 
   ${inc.plan?`<h4>Action plan <span class="tagx edit">yours to complete</span></h4>
@@ -1555,6 +1595,29 @@ $('copy-btn').addEventListener('click',async()=>{
   }catch(e){ $('copy-btn').textContent='Copy unavailable'; }
 });
 
+const EV_EMPTY='<h2>Evidence</h2><p class="ev-empty">Click any cell in the table to see the sentence behind it.</p>';
+
+function showView(v){
+  document.querySelectorAll('.view').forEach(s=>s.classList.toggle('on', s.id==='v-'+v));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on', t.dataset.view===v));
+  if(v==='report'&&STATE&&!REPORT.built) buildReport();
+  window.scrollTo({top:0});
+}
+$('tabs').addEventListener('click',e=>{
+  const t=e.target.closest('.tab');
+  if(t&&!t.disabled) showView(t.dataset.view);
+});
+document.addEventListener('click',e=>{
+  const f=e.target.closest('[data-f4]');
+  if(f){ FIG4=f.dataset.f4; renderFindings(); }
+});
+document.addEventListener('change',e=>{
+  if(e.target.id==='f4dim'){ REPORT.subgroupBy=e.target.value; renderFindings();
+    if(REPORT.built) renderDoc(REPORT.stats); }
+});
+
+$('evidence').innerHTML=EV_EMPTY;
+$('results').innerHTML='<p class="src" style="padding:26px 20px">Load a sample case and press <b>Check documentation</b>.</p>';
 renderCriteriaList();
 </script>
 </body>

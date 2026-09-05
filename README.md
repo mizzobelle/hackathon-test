@@ -16,28 +16,33 @@ Open `index.html` in a browser. No build, no server, no install, no API key.
 xdg-open index.html
 ```
 
-For a public link (the hackathon submission), any static host works — GitHub Pages, Netlify
-drop, Vercel. It is one file.
+One file. Any static host works for a public link — GitHub Pages, Netlify drop, Vercel.
+
+## Navigating it
+
+Four tabs across the top, not one long scroll. The header carries the running state
+(`30 cases · 64% documented · 30/30 confirmed`) on every tab.
+
+| Tab | |
+|---|---|
+| **Set up** | Standard, criteria, engine, case notes. Criteria, the readiness checklist and the sample cases are collapsed by default. |
+| **Table** | The audit table, scrolling inside its own pane, with the evidence panel docked to the right — click a cell, the source sentence appears beside it rather than below the fold. |
+| **Findings** | A 2×2 dashboard: summary + priority, compliance by criterion, ranked gaps with suggested actions, and a fourth panel that switches between **Spread**, **Together** and **Subgroup**. |
+| **Report** | The builder and the draft document. |
 
 ## The 3-minute demo
 
-1. **Before you start** — the checklist at the top. Signals we know an audit is a methodology,
-   not a text box. Collapse it.
-2. Click **Load 30-case sample**, press **Check documentation**. Thirty patients against seven
-   criteria — 210 documentation checks — in about a second. (**Load all four** gives the short
-   version if you are tight on time.)
-3. **Case 1 (7/7)** — the golden path. Click a green cell: the source sentence is quoted.
-4. **Case 2 (1/7)** — the wall of amber. Click one: *"No relevant documentation found."*
-   This is the most common real audit finding — the care probably happened, the notes can't prove it.
-5. **Case 4** — the failure case. Two purple **Needs review** cells:
-   - *Allergy status*: the clerking says NKDA, the drug chart says penicillin allergy.
-     The tool refuses to pick a side and hands it to a human.
-   - *Microbiology*: a urine sample is documented, but not whether it was sent before the
-     first dose. It will not assume.
-6. **Read the table vertically.** The bottom row shows column compliance. Two criteria fail
-   in almost every case — that's the audit finding. Reading notes one at a time you never see it.
-7. **Confirm all rows** — the tool proposes, the clinician decides; nothing reaches the report
-   unconfirmed. Then **Draft audit report**.
+1. **Set up** → **Sample cases** → **30-case sample** → **Check documentation**. Lands you on
+   the table: 30 patients, 7 criteria, 210 checks, about a second.
+2. Click an amber cell — *"No relevant documentation found."* The commonest real audit finding:
+   the care probably happened, the notes can't prove it.
+3. Click the purple **Review** cell on Case 4 — clerking says NKDA, drug chart says penicillin
+   allergy. The tool refuses to pick a side.
+4. **Confirm all** → **Findings**. The priority box: 3 of 7 criteria account for 67% of all gaps.
+5. Switch the fourth panel to **Subgroup**: Emergency Department 34% against specialty wards 90%.
+   Switch the dimension to `Admission`: out of hours 37% against in hours 82%. *That* is the
+   finding — not "documentation is poor" but "fix the front door".
+6. **Report** → the draft, the action plan, **Print / PDF**.
 
 ## The report — a draft that drives action
 
