@@ -93,17 +93,17 @@
 
   .tablewrap{padding:0 22px 6px;overflow-x:auto}
   table{border-collapse:collapse;width:100%;font-size:.8rem;margin-top:16px}
-  th,td{border-bottom:1px solid var(--line);padding:9px 8px;text-align:left;vertical-align:middle}
+  th,td{border-bottom:1px solid var(--line);padding:8px 5px;text-align:left;vertical-align:middle}
   thead th{position:sticky;top:0;background:#fff;color:#4a656b;font-size:.68rem;font-weight:800;letter-spacing:.05em;
-    text-transform:uppercase;border-bottom:2px solid var(--line);white-space:normal;min-width:76px}
-  thead th.case-col{min-width:150px}
+    text-transform:uppercase;border-bottom:2px solid var(--line);white-space:normal;min-width:62px}
+  thead th.case-col{min-width:118px}
   tbody tr:hover{background:#fafcfc}
   tfoot td{font-size:.71rem;font-weight:800;color:#4a656b;border-top:2px solid var(--line);border-bottom:0;padding-top:10px}
   .case-name{font-weight:750}
   .case-name span{display:block;color:var(--muted);font-weight:400;font-size:.72rem}
 
-  .chip{display:inline-block;width:100%;padding:5px 6px;border-radius:6px;border:1px solid transparent;
-    font-size:.69rem;font-weight:800;text-align:center;cursor:pointer;letter-spacing:.01em}
+  .chip{display:inline-block;width:100%;padding:5px 4px;border-radius:6px;border:1px solid transparent;
+    font-size:.67rem;white-space:nowrap;font-weight:800;text-align:center;cursor:pointer;letter-spacing:.01em}
   .chip.met{background:var(--met-bg);color:var(--met);border-color:#b9e2cc}
   .chip.notmet{background:var(--notmet-bg);color:var(--notmet);border-color:#f2c3c1}
   .chip.nodoc{background:var(--nodoc-bg);color:var(--nodoc);border-color:#f0d5a4}
@@ -127,8 +127,6 @@
   .nogaps{color:var(--met);font-size:.85rem;margin:6px 0 0}
 
   .report{margin-top:20px;padding:22px}
-  .report-out{margin-top:14px;white-space:pre-wrap;font-family:Georgia,serif;font-size:.9rem;
-    padding:18px 20px;border:1px solid var(--line);border-radius:10px;background:#fbfdfd;max-height:460px;overflow:auto}
 
   .safety{margin-top:20px;padding:18px 22px;border:1px solid #dbe7e8;border-radius:12px;background:#fff}
   .safety ul{margin:10px 0 0;padding-left:18px;font-size:.84rem;color:#3f585e}
@@ -137,6 +135,54 @@
   .warn{margin:12px 0 0;padding:10px 13px;border-radius:8px;background:var(--nodoc-bg);color:#7a4e05;font-size:.78rem}
   .apirow{margin-top:10px;display:none}
   .apirow.on{display:block}
+
+  /* ---------- report document + charts ---------- */
+  .doc{margin-top:18px;padding:30px 34px;border:1px solid var(--line);border-radius:12px;background:#fbfdfd}
+  .doc-head{padding-bottom:16px;border-bottom:2px solid var(--ink);margin-bottom:22px}
+  .doc-head h3{margin:0;font-family:Georgia,serif;font-size:1.6rem;font-weight:400;letter-spacing:-.02em}
+  .doc-head p{margin:6px 0 0;color:var(--muted);font-size:.82rem}
+  .doc h4{margin:26px 0 10px;font-size:.73rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#4a656b}
+  .doc h4:first-of-type{margin-top:0}
+  .doc p.body{margin:0 0 12px;font-family:Georgia,serif;font-size:.94rem;line-height:1.62}
+
+  .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:6px}
+  .tile{padding:15px 17px;border:1px solid var(--line);border-radius:10px;background:#fff}
+  .tile .v{font-size:2rem;font-weight:750;letter-spacing:-.03em;line-height:1.05}
+  .tile .k{margin-top:5px;color:var(--muted);font-size:.75rem;font-weight:750;letter-spacing:.02em}
+  .tile .sub{margin-top:2px;color:#9aa8ab;font-size:.71rem}
+
+  .figure{margin:0 0 4px;padding:18px 20px 14px;border:1px solid var(--line);border-radius:10px;background:#fcfcfb}
+  .figure .cap{font-size:.85rem;font-weight:750}
+  .figure .capsub{margin:3px 0 14px;color:var(--muted);font-size:.76rem}
+  .figure svg{display:block;width:100%;height:auto;overflow:visible}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;margin:0 0 14px;font-size:.76rem;color:#52514e}
+  .legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+  .ax{fill:#898781;font-size:11px}
+  .axlab{fill:#52514e;font-size:11.5px}
+  .val{fill:#0b0b0b;font-size:11.5px;font-weight:700;font-variant-numeric:tabular-nums}
+  .grid{stroke:#e1e0d9;stroke-width:1}
+  .base{stroke:#c3c2b7;stroke-width:1}
+  .seg{cursor:pointer}
+  .seg:hover{opacity:.82}
+
+  #tip{position:fixed;z-index:50;display:none;max-width:250px;padding:9px 11px;border-radius:8px;
+    background:#12303a;color:#fff;font-size:.76rem;line-height:1.45;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,.22)}
+  #tip b{display:block;margin-bottom:2px}
+
+  table.stats{margin-top:4px;font-size:.79rem}
+  table.stats td.num,table.stats th.num{text-align:right;font-variant-numeric:tabular-nums}
+  table.stats tbody tr td:first-child{font-weight:700}
+  .narrative{white-space:pre-wrap;font-family:Georgia,serif;font-size:.92rem;line-height:1.62}
+
+  @media print{
+    body{background:#fff}
+    .shell{width:100%;padding:0}
+    header.top,details.prep,.workspace,.safety,.btnrow,.demo-badge{display:none !important}
+    .report{border:0;box-shadow:none;padding:0}
+    .report>h2,.report>.hint{display:none}
+    .doc{border:0;padding:0}
+    .figure{break-inside:avoid}
+  }
   @media (max-width:1000px){.workspace{grid-template-columns:1fr}}
 </style>
 </head>
@@ -202,6 +248,7 @@
           <button class="ghost tiny" data-load="C">Load case C</button>
           <button class="ghost tiny" data-load="D">Load case D (conflict)</button>
           <button class="ghost tiny" data-load="ALL">Load all four</button>
+          <button class="ghost tiny" data-load="30" style="background:#d5ebe8">Load 30-case sample</button>
         </div>
       </div>
 
@@ -232,6 +279,7 @@
           <p class="hint">One row per case, one column per criterion. Click any cell to see the source sentence.</p>
         </div>
         <div style="display:flex;gap:7px">
+          <button class="ghost tiny" id="confirm-all" disabled>Confirm all rows</button>
           <button class="ghost tiny" id="csv" disabled>Export CSV</button>
         </div>
       </div>
@@ -255,9 +303,10 @@
       from the confirmed table. A draft for the clinician to edit — not a finished submission.</p>
     <div class="btnrow">
       <button class="ghost" id="report-btn" disabled>Draft audit report</button>
-      <button class="quiet" id="copy-btn" style="display:none">Copy report</button>
+      <button class="quiet" id="copy-btn" style="display:none">Copy narrative</button>
+      <button class="quiet" id="print-btn" style="display:none">Print / save as PDF</button>
     </div>
-    <div id="report-out" class="report-out" style="display:none"></div>
+    <div id="report-doc" style="display:none"></div>
   </section>
 
   <section class="panel safety">
@@ -276,12 +325,14 @@
     · <a href="handover.html">Handover note generator</a>
   </footer>
 </main>
+<div id="tip" role="status"></div>
 
 <script>
 /* ============================ CRITERIA ENGINE ============================ */
 
 const MET='met', NOTMET='notmet', NODOC='nodoc', REVIEW='review';
 const LABEL={met:'Met',notmet:'Not met',nodoc:'Not documented',review:'Needs review'};
+const SHORT={met:'Met',notmet:'Not met',nodoc:'Not doc.',review:'Review'};
 const NOEV='No relevant documentation found.';
 
 function sentences(text){
@@ -512,7 +563,9 @@ function renderCriteriaList(){
     `<li><span class="n">${i+1}</span><span><b>${esc(c.name)}</b><br>${esc(c.help)}</span></li>`).join('');
 }
 
-function render(){
+function render(){ renderSummary(); renderTable(); }
+
+function renderSummary(){
   if(!STATE){ return; }
   const {rows,tpl}=STATE;
   const N=rows.length, M=tpl.criteria.length, total=N*M;
@@ -528,12 +581,16 @@ function render(){
     (nm?`<span class="stat r">${nm} not met</span>`:'')+
     (rv?`<span class="stat p">${rv} need review</span>`:'')+
     `<span class="stat">${confirmed}/${N} rows confirmed by clinician</span>`;
+  renderGaps();
+}
 
+function renderTable(){
+  const {rows,tpl}=STATE, N=rows.length;
   const head=tpl.criteria.map((c,i)=>`<th title="${esc(c.name)}">${i+1}. ${esc(c.short)}</th>`).join('');
   const body=rows.map((r,ri)=>
     `<tr><td class="case-name">${esc(r.id)}<span>${esc(r.detail)}</span></td>`+
     r.cells.map((c,ci)=>
-      `<td><button class="chip ${c.status}" data-r="${ri}" data-c="${ci}">${LABEL[c.status]}</button></td>`).join('')+
+      `<td><button class="chip ${c.status}" data-r="${ri}" data-c="${ci}" title="${esc(tpl.criteria[ci].name)} — ${LABEL[c.status]}">${SHORT[c.status]}</button></td>`).join('')+
     `<td style="text-align:center"><input type="checkbox" class="confirm" data-r="${ri}" ${r.confirmed?'checked':''}
        style="width:16px;height:16px;accent-color:var(--teal)" title="Clinician confirms this row"></td></tr>`).join('');
   const foot=tpl.criteria.map((c,ci)=>{
@@ -546,7 +603,13 @@ function render(){
       <tbody>${body}</tbody>
       <tfoot><tr><td>Column compliance</td>${foot}<td></td></tr></tfoot>
     </table></div>`;
+  $('csv').disabled=false;
+  $('report-btn').disabled=false;
+  $('confirm-all').disabled=false;
+}
 
+function renderGaps(){
+  const {rows,tpl}=STATE, N=rows.length;
   const gapIdx=tpl.criteria.map((c,ci)=>({ci,c,
       fails:rows.filter(r=>r.cells[ci].status!==MET).length}))
     .filter(x=>x.fails>0).sort((a,b)=>b.fails-a.fails);
@@ -559,9 +622,6 @@ function render(){
         `</ul>`
       : `<p class="nogaps">All criteria documented in all cases. No documentation gaps identified in this sample.</p>`)+
     `</div>`;
-
-  $('csv').disabled=false;
-  $('report-btn').disabled=false;
 }
 
 const ACTIONS={
@@ -603,12 +663,209 @@ document.addEventListener('click',e=>{
 document.addEventListener('change',e=>{
   if(e.target.classList.contains('confirm')){
     STATE.rows[+e.target.dataset.r].confirmed=e.target.checked;
-    render();
+    renderSummary();
   }
 });
 
 $('template').addEventListener('change',renderCriteriaList);
 $('engine').addEventListener('change',e=>$('apirow').classList.toggle('on',e.target.value==='claude'));
+
+const SAMPLE30=[
+`Patient: 68M admitted with productive cough and fever. CURB-65 = 2.
+Impression: community-acquired pneumonia (CAP).
+Allergies: NKDA, checked on admission.
+Blood cultures and sputum sample sent prior to first antibiotic dose.
+Started amoxicillin 1g PO TDS as per local CAP guideline.
+Plan: 5-day course, review at 48h with culture results.
+Day 2 ward round: afebrile, CRP falling. Antibiotic review done, culture negative so far, continue oral amoxicillin, stop date confirmed day 5.`,
+
+`Patient: 54F admitted overnight with dysuria and fever.
+Started co-amoxiclav 625mg PO TDS.
+Obs stable overnight. Continues antibiotics.
+Day 3: feels better. Continue current management.`,
+
+`Patient: 41M admitted with cellulitis right lower leg, spreading erythema, temp 38.2.
+Allergies: penicillin (rash), documented.
+Started clarithromycin 500mg PO BD, chosen due to penicillin allergy as per local guideline.
+Plan: 7 days.
+Day 2: erythema reducing. Continue.`,
+
+`Patient: 77F admitted from a nursing home, confused, temp 38.4. Impression: urosepsis.
+Clerking: NKDA.
+Drug chart allergy box: allergic to penicillin, documented reaction unknown.
+Started ceftriaxone 2g IV OD.
+Urine sample sent.
+Day 2: improving.`,
+
+`Patient: 82M, day 6 of admission, new fever and oxygen requirement.
+Impression: hospital-acquired pneumonia.
+Allergies: NKDA.
+Sputum sent prior to first dose. Blood cultures taken before antibiotics.
+Started piperacillin-tazobactam 4.5g IV TDS as per trust HAP guideline.
+Plan: review at 48h, total 7 days.
+Day 3: antibiotic review — IV to oral switch to co-amoxiclav, stop date day 7.`,
+
+`Patient: 29F with loin pain, rigors, vomiting. Impression: pyelonephritis.
+NKDA documented.
+MSU sent before antibiotics; blood cultures taken on admission.
+Started ceftriaxone 1g IV OD per local urinary sepsis guideline.
+Plan: 10-day course, IV to oral at 48h if afebrile.
+Day 2: antibiotic review — afebrile, switched to oral ciprofloxacin.`,
+
+`Patient: 71M known COPD, increased sputum purulence and breathlessness.
+Impression: infective exacerbation of COPD.
+Allergies: NKDA.
+Started doxycycline 100mg PO OD per local guideline.
+Plan: 5 days.
+Day 2: improving.`,
+
+`Patient: 63F, left iliac fossa pain, tender, CRP 180. Impression: diverticulitis.
+Allergy status: NKDA.
+Started co-amoxiclav 1.2g IV TDS.
+Blood cultures sent.
+Day 2: still tender, continue.`,
+
+`Patient: 58M, post-op day 4 laparotomy, wound erythema and discharge.
+Impression: surgical site infection.
+Allergies: NKDA recorded.
+Wound swab sent prior to starting antibiotics.
+Started flucloxacillin 1g IV QDS as per trust guideline.
+Plan: 7 days, review at 48h.
+Day 2: antibiotic review documented — clinically improving, continue.`,
+
+`Patient: 19F, sore throat, exudate, fever. Impression: tonsillitis, Centor 3.
+NKDA.
+Started phenoxymethylpenicillin 500mg PO QDS.
+Plan: 10 days as per guideline.`,
+
+`Patient: 84M, witnessed choking episode, then fever and right basal crackles.
+Impression: aspiration pneumonia.
+Started co-amoxiclav 1.2g IV TDS.
+Day 2: obs stable. Continue.
+Day 3: family updated.`,
+
+`Patient: 47F, RUQ pain, Murphy's positive, fever. Impression: acute cholecystitis.
+Allergies: NKDA, checked.
+Blood cultures sent before first dose.
+Started co-amoxiclav 1.2g IV TDS as per intra-abdominal sepsis guideline.
+Plan: 5 days IV then review.
+Day 2: antibiotic review — continue IV, surgical review pending.`,
+
+`Patient: 34M, hot swollen right knee, unable to weight bear. Impression: septic arthritis.
+NKDA documented.
+Joint aspirate and blood cultures taken prior to antibiotics.
+Started flucloxacillin 2g IV QDS per bone and joint infection guideline.
+Plan: 2 weeks IV, review with microbiology.
+Day 2: microbiology advice documented, antibiotic review — continue.`,
+
+`Patient: 61M diabetic, chronic foot ulcer, probe to bone. Impression: osteomyelitis.
+Allergies: penicillin — anaphylaxis, documented.
+Deep tissue sample sent before antibiotics.
+Started vancomycin 1g IV BD, chosen due to penicillin allergy as per guideline.
+Plan: 6 weeks, weekly review.`,
+
+`Patient: 22F, photophobia, neck stiffness, fever. Impression: suspected bacterial meningitis.
+NKDA.
+Blood cultures taken prior to first dose. LP performed, CSF sent.
+Started ceftriaxone 2g IV BD immediately as per trust meningitis guideline.
+Plan: 10 days pending CSF.
+Day 2: antibiotic review — CSF negative, continue pending cultures.`,
+
+`Patient: 55F, day 9 post chemotherapy, temp 38.6, neutrophils 0.2.
+Impression: neutropenic sepsis.
+NKDA documented.
+Blood cultures from line and peripherally taken prior to antibiotics.
+Started piperacillin-tazobactam 4.5g IV QDS within one hour as per neutropenic sepsis protocol.
+Plan: review at 48h with cultures.
+Day 2: antibiotic review — afebrile, cultures negative, continue.`,
+
+`Patient: 79F, profuse diarrhoea, recent co-amoxiclav course. Impression: C. difficile infection.
+Allergies: NKDA.
+Stool sample sent.
+Started vancomycin 125mg PO QDS as per guideline.
+Plan: 10 days.
+Day 3: stool frequency reducing.`,
+
+`Patient: 88M, long-term catheter, fever and rigors.
+Impression: catheter-associated urinary tract infection.
+Started gentamicin 240mg IV OD.
+Catheter specimen of urine sent.
+Day 2: apyrexial.`,
+
+`Patient: 66M, cellulitis of left forearm following cannula.
+Started flucloxacillin 500mg PO QDS.
+Obs unremarkable.
+Day 2: erythema static.
+Day 3: discharged.`,
+
+`Patient: 44F, post-appendicectomy collection on CT. Impression: intra-abdominal collection.
+NKDA.
+Drain fluid sent for culture prior to antibiotic change.
+Started piperacillin-tazobactam 4.5g IV TDS as per guideline.
+Plan: 7 days, review at 48h.
+Day 2: antibiotic review documented, continue.`,
+
+`Patient: 73M, cough and fever, CXR consolidation. Impression: community-acquired pneumonia.
+Started co-amoxiclav 1.2g IV TDS.
+Day 2: obs improving.
+Day 3: continue.`,
+
+`Patient: 38F, right lower leg erythema, well systemically.
+Started flucloxacillin 1g PO QDS.
+Day 2: no better.
+Day 3: switched, plan reviewed on ward round.`,
+
+`Patient: 26F, dysuria and frequency, afebrile. Impression: lower urinary tract infection.
+NKDA documented.
+MSU sent prior to first dose.
+Started nitrofurantoin 100mg PO BD as per local guideline.
+Plan: 3-day course.`,
+
+`Patient: 59M, Hickman line site erythema, rigors after flush.
+Impression: line-associated bloodstream infection.
+Allergies: NKDA.
+Paired blood cultures taken from line and periphery before antibiotics.
+Started vancomycin 1g IV BD per trust line infection guideline.
+Plan: review at 48h with culture results.
+Day 2: antibiotic review documented — line removed, continue.`,
+
+`Patient: 69M, pleuritic pain, loculated effusion on ultrasound. Impression: empyema.
+NKDA.
+Pleural fluid sent prior to antibiotics.
+Started co-amoxiclav 1.2g IV TDS.
+Plan: prolonged course, review with respiratory team.`,
+
+`Patient: 52M, perineal pain, difficulty voiding, fever. Impression: acute prostatitis.
+Allergy status not recorded.
+Started ciprofloxacin 500mg PO BD as per guideline.
+Plan: 28 days.
+Day 2: improving.`,
+
+`Patient: 74F, sharply demarcated facial erythema, fever. Impression: erysipelas.
+NKDA documented.
+Started benzylpenicillin 1.2g IV QDS as per cellulitis guideline.
+Plan: 7 days, review at 48h.
+Day 2: antibiotic review — switched to oral, stop date day 7.`,
+
+`Patient: 81M, day 5 inpatient, new fever and productive cough.
+Started meropenem 1g IV TDS.
+Obs charted.
+Day 2: continues.
+Day 4: still on antibiotics.`,
+
+`Patient: 64F, jaundice, fever, RUQ pain. Impression: biliary sepsis / cholangitis.
+NKDA on drug chart.
+Blood cultures taken before antibiotics.
+Started piperacillin-tazobactam 4.5g IV TDS per guideline.
+Plan: ERCP, antibiotics for 7 days, review at 48h.
+Day 2: antibiotic review documented post-ERCP, continue.`,
+
+`Patient: 70M, unwell, raised CRP, started on antibiotics in the emergency department.
+Co-amoxiclav given.
+Admitted to the medical ward.
+Day 2: obs stable, continue.
+Day 3: for discharge planning.`
+];
 
 const CASES={
 A:`Patient: 68M admitted with productive cough and fever. CURB-65 = 2.
@@ -636,7 +893,8 @@ Day 2: improving.`
 };
 document.querySelectorAll('[data-load]').forEach(b=>b.addEventListener('click',()=>{
   const k=b.dataset.load;
-  $('notes').value = k==='ALL' ? [CASES.A,CASES.B,CASES.C,CASES.D].join('\n---\n') : CASES[k];
+  $('notes').value = k==='30' ? SAMPLE30.join('\n---\n')
+    : k==='ALL' ? [CASES.A,CASES.B,CASES.C,CASES.D].join('\n---\n') : CASES[k];
   $('template').value='amr'; renderCriteriaList();
 }));
 
@@ -661,7 +919,7 @@ $('run').addEventListener('click',async()=>{
       rows=runLocal(cases,tpl);
     }
     STATE={rows,tpl};
-    $('report-out').style.display='none'; $('copy-btn').style.display='none';
+    $('report-doc').style.display='none'; $('copy-btn').style.display='none'; $('print-btn').style.display='none';
     render();
   }catch(err){
     fail(err.message||'Check failed.');
@@ -674,8 +932,9 @@ $('clear').addEventListener('click',()=>{
   $('notes').value=''; STATE=null;
   $('scopebar').style.display='none'; $('evidence').innerHTML=''; $('gaps').innerHTML='';
   $('err').style.display='none';
-  $('report-out').style.display='none'; $('copy-btn').style.display='none';
-  $('csv').disabled=true; $('report-btn').disabled=true;
+  $('report-doc').style.display='none'; $('copy-btn').style.display='none'; $('print-btn').style.display='none';
+  $('csv').disabled=true; $('report-btn').disabled=true; $('confirm-all').disabled=true;
+  $('confirm-all').textContent='Confirm all rows';
   $('results').innerHTML=`<div class="empty"><div><div class="ico">▤</div>
     <p>Load a case on the left and press <b>Check documentation</b>. Nothing is sent anywhere and nothing is stored.</p></div></div>`;
 });
@@ -694,17 +953,112 @@ $('csv').addEventListener('click',()=>{
   URL.revokeObjectURL(a.href);
 });
 
+/* ---------------- charts ---------------- */
+/* Status palette validated with the dataviz validator against this surface:
+   adjacent CVD ΔE 16.2 (protan), normal-vision ΔE 30.3 — all hard checks pass.
+   The amber sits below 3:1 contrast, so every segment carries a direct label
+   and a full data table sits under the figures (the documented relief rule). */
+const FILL={met:'#008300', nodoc:'#eda100', review:'#4a3aa7', notmet:'#e34948'};
+const INK ={met:'#fff',    nodoc:'#0b0b0b', review:'#fff',    notmet:'#fff'};
+const ORDER=[MET,NODOC,REVIEW,NOTMET];
+const SEQ='#2a78d6';
+
+function legend(){
+  return '<div class="legend">'+ORDER.map(s=>
+    `<span><i style="background:${FILL[s]}"></i>${LABEL[s]}</span>`).join('')+'</div>';
+}
+function tipAttr(title,body){
+  return ` data-tip="${esc(title)}||${esc(body)}"`;
+}
+
+function svgStacked(per,N){
+  const W=760,LW=252,BX=260,BW=392,RH=32,BH=18,TOP=22;
+  const H=TOP+per.length*RH+34;
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Documentation status by criterion">`;
+  for(let t=0;t<=4;t++){
+    const x=BX+BW*t/4;
+    s+=`<line class="grid" x1="${x}" y1="${TOP-6}" x2="${x}" y2="${TOP+per.length*RH-8}"/>`;
+    s+=`<text class="ax" x="${x}" y="${TOP+per.length*RH+10}" text-anchor="middle">${t*25}%</text>`;
+  }
+  s+=`<text class="ax" x="${BX+BW/2}" y="${TOP+per.length*RH+27}" text-anchor="middle">Proportion of the ${N} cases audited</text>`;
+  per.forEach((p,i)=>{
+    const y=TOP+i*RH;
+    s+=`<clipPath id="cp${i}"><rect x="${BX}" y="${y}" width="${BW}" height="${BH}" rx="4"/></clipPath>`;
+    s+=`<text class="axlab" x="${LW}" y="${y+BH/2+4}" text-anchor="end">${esc(p.c.name)}</text>`;
+    s+=`<rect x="${BX}" y="${y}" width="${BW}" height="${BH}" rx="4" fill="#f0efec"/>`;
+    s+=`<g clip-path="url(#cp${i})">`;
+    let cur=BX;
+    ORDER.forEach(st=>{
+      const n=p.counts[st]; if(!n) return;
+      const w=BW*n/N;
+      s+=`<rect class="seg" x="${cur.toFixed(2)}" y="${y}" width="${Math.max(w-2,1).toFixed(2)}" height="${BH}" fill="${FILL[st]}"`+
+         tipAttr(p.c.name,`${LABEL[st]}: ${n} of ${N} cases (${Math.round(100*n/N)}%)`)+`/>`;
+      if(w>=19) s+=`<text x="${(cur+w/2-1).toFixed(2)}" y="${y+BH/2+4}" text-anchor="middle" `+
+         `style="fill:${INK[st]};font-size:10.5px;font-weight:700;pointer-events:none">${n}</text>`;
+      cur+=w;
+    });
+    s+=`</g>`;
+    s+=`<text class="val" x="${BX+BW+10}" y="${y+BH/2+4}">${p.pct}%</text>`;
+  });
+  return s+'</svg>';
+}
+
+function svgHistogram(dist,M,N){
+  const W=760,H=232,L=52,R=24,T=16,B=52;
+  const pw=W-L-R, ph=H-T-B;
+  const max=Math.max(1,...dist);
+  const step=Math.max(1,Math.ceil(max/4));
+  const top=step*Math.ceil(max/step);
+  const bw=pw/(M+1), pad=bw*0.22;
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Distribution of criteria met per case">`;
+  for(let v=0;v<=top;v+=step){
+    const y=T+ph-ph*v/top;
+    s+=`<line class="grid" x1="${L}" y1="${y}" x2="${W-R}" y2="${y}"/>`;
+    s+=`<text class="ax" x="${L-8}" y="${y+4}" text-anchor="end">${v}</text>`;
+  }
+  dist.forEach((n,i)=>{
+    const x=L+i*bw+pad, w=bw-pad*2, hh=ph*n/top, y=T+ph-hh;
+    if(n>0){
+      const r=Math.min(4,hh);
+      s+=`<path class="seg" d="M${x} ${T+ph} L${x} ${y+r} Q${x} ${y} ${x+r} ${y} L${x+w-r} ${y} Q${x+w} ${y} ${x+w} ${y+r} L${x+w} ${T+ph} Z" fill="${SEQ}"`+
+         tipAttr(`${i} of ${M} criteria documented`,`${n} case${n===1?'':'s'} — ${Math.round(100*n/N)}% of the sample`)+`/>`;
+      s+=`<text class="val" x="${x+w/2}" y="${y-6}" text-anchor="middle">${n}</text>`;
+    }
+    s+=`<text class="ax" x="${x+w/2}" y="${T+ph+17}" text-anchor="middle">${i}</text>`;
+  });
+  s+=`<line class="base" x1="${L}" y1="${T+ph}" x2="${W-R}" y2="${T+ph}"/>`;
+  s+=`<text class="ax" x="${L+pw/2}" y="${H-14}" text-anchor="middle">Criteria documented as Met, per case (out of ${M})</text>`;
+  s+=`<text class="ax" x="14" y="${T+ph/2}" text-anchor="middle" transform="rotate(-90 14 ${T+ph/2})">Number of cases</text>`;
+  return s+'</svg>';
+}
+
+/* ---------------- report document ---------------- */
+let NARRATIVE='';
+
 $('report-btn').addEventListener('click',()=>{
   const {rows,tpl}=STATE, N=rows.length, M=tpl.criteria.length;
-  const per=tpl.criteria.map((c,ci)=>({c, met:rows.filter(r=>r.cells[ci].status===MET).length,
-    review:rows.filter(r=>r.cells[ci].status===REVIEW).length}));
-  const worst=[...per].sort((a,b)=>a.met-b.met).filter(x=>x.met<N);
+  const per=tpl.criteria.map((c,ci)=>{
+    const counts={}; [MET,NOTMET,NODOC,REVIEW].forEach(s=>counts[s]=rows.filter(r=>r.cells[ci].status===s).length);
+    return {c, ci, counts, met:counts[MET], pct:Math.round(100*counts[MET]/N)};
+  });
+  const ranked=[...per].sort((a,b)=>a.pct-b.pct);
+  const worst=ranked.filter(x=>x.met<N);
   const confirmed=rows.filter(r=>r.confirmed).length;
   const totalMet=per.reduce((a,x)=>a+x.met,0);
-  const pct=Math.round(100*totalMet/(N*M));
-  const needsReview=per.reduce((a,x)=>a+x.review,0);
+  const totalChecks=N*M;
+  const pct=Math.round(100*totalMet/totalChecks);
+  const needsReview=per.reduce((a,x)=>a+x.counts[REVIEW],0);
+  const notDoc=per.reduce((a,x)=>a+x.counts[NODOC],0);
+  const notMet=per.reduce((a,x)=>a+x.counts[NOTMET],0);
 
-  const txt=
+  const scores=rows.map(r=>r.cells.filter(c=>c.status===MET).length);
+  const dist=Array.from({length:M+1},(_,i)=>scores.filter(v=>v===i).length);
+  const sorted=[...scores].sort((a,b)=>a-b);
+  const median=N%2?sorted[(N-1)/2]:(sorted[N/2-1]+sorted[N/2])/2;
+  const mean=(totalMet/N);
+  const fullyCompliant=scores.filter(v=>v===M).length;
+
+  NARRATIVE=
 `INTRODUCTION
 ${tpl.name}. ${tpl.standard} sets out what the clinical record should contain for each patient in this group. Incomplete documentation cannot demonstrate that the required steps took place, regardless of the care actually delivered. This audit examines the record only.
 
@@ -715,16 +1069,15 @@ STANDARD
 ${tpl.standard}. Target: ${tpl.target}.
 
 METHODS
-${N} case${N>1?'s were':' was'} reviewed retrospectively against ${M} fixed criteria, applied identically to every case. Each criterion was assessed as Met, Not met, Not documented or Needs review. Every judgement is supported by a verbatim quotation from the record; where no relevant text exists the criterion is recorded as Not documented rather than assumed. Contradictory records were flagged for clinician resolution and not scored automatically. ${confirmed} of ${N} rows have been confirmed by a clinician at the time of writing.
+${N} case${N>1?'s were':' was'} reviewed retrospectively against ${M} fixed criteria, applied identically to every case. Each criterion was assessed as Met, Not met, Not documented or Needs review. Every judgement is supported by a verbatim quotation from the record; where no relevant text exists the criterion is recorded as Not documented rather than assumed. Contradictory or ambiguous records were flagged for clinician resolution and not scored automatically. ${confirmed} of ${N} rows have been confirmed by a clinician at the time of writing.
 
 RESULTS
-Overall documented compliance was ${totalMet} of ${N*M} checks (${pct}%).
-${per.map(x=>`- ${x.c.name}: ${x.met} of ${N} cases`).join('\n')}
-${needsReview?`${needsReview} check${needsReview>1?'s':''} required clinician review because the record was contradictory or ambiguous.`:''}
+Overall documented compliance was ${totalMet} of ${totalChecks} checks (${pct}%). Cases documented a median of ${median} and a mean of ${mean.toFixed(1)} of the ${M} criteria; ${fullyCompliant} of ${N} case${fullyCompliant===1?'':'s'} (${Math.round(100*fullyCompliant/N)}%) met all ${M}. Of the ${totalChecks-totalMet} checks not met, ${notDoc} ${notDoc===1?'was':'were'} Not documented, ${notMet} ${notMet===1?'was':'were'} Not met and ${needsReview} required clinician review because the record was contradictory or ambiguous.
+${per.map(x=>`- ${x.c.name}: ${x.met} of ${N} cases (${x.pct}%)`).join('\n')}
 
 DISCUSSION
 ${worst.length
-  ? `The weakest criterion was "${worst[0].c.name}", documented in ${worst[0].met} of ${N} cases${worst[1]?`, followed by "${worst[1].c.name}" at ${worst[1].met} of ${N}`:''}. These are consistent shortfalls across the sample rather than isolated omissions, which points to the documentation form rather than to individual practice. This audit assesses the record alone and makes no assessment of the appropriateness of the clinical care given.`
+  ? `The weakest criterion was "${worst[0].c.name}", documented in ${worst[0].met} of ${N} cases (${worst[0].pct}%)${worst[1]?`, followed by "${worst[1].c.name}" at ${worst[1].met} of ${N} (${worst[1].pct}%)`:''}. ${notDoc>notMet?`The overwhelming majority of shortfalls are absent documentation rather than documented failures of the standard, which is consistent with care being delivered but not recorded.`:``} These are consistent shortfalls across the sample rather than isolated omissions, which points to the documentation form rather than to individual practice. This audit assesses the record alone and makes no assessment of the appropriateness of the clinical care given.`
   : `All criteria were documented in all cases reviewed. No documentation shortfall was identified in this sample. This audit assesses the record alone and makes no assessment of the clinical care given.`}
 
 CONCLUSION
@@ -734,14 +1087,85 @@ ${worst.length
 
 Draft generated by AuditPilot from clinician-confirmed documentation checks. To be reviewed and edited by the responsible clinician before submission.`;
 
-  $('report-out').textContent=txt;
-  $('report-out').style.display='block';
+  const statsRows=ranked.map(x=>
+    `<tr><td>${esc(x.c.name)}</td>`+
+    ORDER.map(s=>`<td class="num">${x.counts[s]}</td>`).join('')+
+    `<td class="num">${x.pct}%</td></tr>`).join('');
+
+  $('report-doc').innerHTML=
+`<div class="doc">
+  <div class="doc-head">
+    <h3>${esc(tpl.name)}</h3>
+    <p>${esc(tpl.standard)} · ${N} cases · ${M} criteria · ${totalChecks} documentation checks · fictional data</p>
+  </div>
+
+  <h4>Summary</h4>
+  <div class="tiles">
+    <div class="tile"><div class="v">${pct}%</div><div class="k">Documented compliance</div><div class="sub">${totalMet} of ${totalChecks} checks met</div></div>
+    <div class="tile"><div class="v">${notDoc}</div><div class="k">Not documented</div><div class="sub">${Math.round(100*notDoc/totalChecks)}% of all checks</div></div>
+    <div class="tile"><div class="v">${fullyCompliant}<span style="font-size:1.1rem;color:#898781">/${N}</span></div><div class="k">Fully compliant cases</div><div class="sub">all ${M} criteria documented</div></div>
+    <div class="tile"><div class="v">${needsReview}</div><div class="k">Escalated to a clinician</div><div class="sub">record contradictory or unclear</div></div>
+  </div>
+
+  <h4>Figure 1 — Documentation status by criterion</h4>
+  <div class="figure">
+    <div class="cap">Every criterion, every case, ranked worst first</div>
+    <div class="capsub">Read this vertically: a criterion that is short across the whole sample is a form problem, not a practice problem.</div>
+    ${legend()}
+    ${svgStacked(ranked,N)}
+  </div>
+
+  <h4>Figure 2 — Distribution of documentation completeness</h4>
+  <div class="figure">
+    <div class="cap">How many of the ${M} criteria each case documented</div>
+    <div class="capsub">Separates "a few poorly documented cases" from "every case misses the same things".</div>
+    ${svgHistogram(dist,M,N)}
+  </div>
+
+  <h4>Descriptive statistics</h4>
+  <div style="overflow-x:auto"><table class="stats">
+    <thead><tr><th>Criterion</th>${ORDER.map(s=>`<th class="num">${LABEL[s]}</th>`).join('')}<th class="num">% Met</th></tr></thead>
+    <tbody>${statsRows}</tbody>
+    <tfoot><tr><td>All criteria</td>${ORDER.map(s=>
+      `<td class="num">${per.reduce((a,x)=>a+x.counts[s],0)}</td>`).join('')}<td class="num">${pct}%</td></tr></tfoot>
+  </table></div>
+  <p class="capsub" style="margin-top:8px">Median ${median} of ${M} criteria per case · mean ${mean.toFixed(1)} · range ${sorted[0]}–${sorted[N-1]} · ${confirmed} of ${N} rows clinician-confirmed.</p>
+
+  <h4>Report</h4>
+  <div class="narrative">${esc(NARRATIVE)}</div>
+</div>`;
+
+  $('report-doc').style.display='block';
   $('copy-btn').style.display='inline-flex';
+  $('print-btn').style.display='inline-flex';
+  $('report-doc').scrollIntoView({behavior:'smooth',block:'start'});
+});
+
+$('print-btn').addEventListener('click',()=>window.print());
+
+$('confirm-all').addEventListener('click',()=>{
+  const all=STATE.rows.every(r=>r.confirmed);
+  STATE.rows.forEach(r=>r.confirmed=!all);
+  document.querySelectorAll('.confirm').forEach(c=>c.checked=!all);
+  $('confirm-all').textContent=all?'Confirm all rows':'Unconfirm all';
+  renderSummary();
+});
+
+/* chart tooltips */
+const tip=$('tip');
+document.addEventListener('mousemove',e=>{
+  const t=e.target.closest?e.target.closest('[data-tip]'):null;
+  if(!t){ tip.style.display='none'; return; }
+  const [a,b]=t.dataset.tip.split('||');
+  tip.innerHTML='<b>'+esc(a)+'</b>'+esc(b);
+  tip.style.display='block';
+  tip.style.left=Math.min(e.clientX+14, window.innerWidth-268)+'px';
+  tip.style.top=(e.clientY+16)+'px';
 });
 
 $('copy-btn').addEventListener('click',async()=>{
-  try{ await navigator.clipboard.writeText($('report-out').textContent);
-    $('copy-btn').textContent='Copied'; setTimeout(()=>$('copy-btn').textContent='Copy report',1600);
+  try{ await navigator.clipboard.writeText(NARRATIVE);
+    $('copy-btn').textContent='Copied'; setTimeout(()=>$('copy-btn').textContent='Copy narrative',1600);
   }catch(e){ $('copy-btn').textContent='Copy unavailable'; }
 });
 
